@@ -7,8 +7,9 @@ const RecipeMain = ({ navigation, route }) => {
   const [recipeTime, setRecipeTime] = useState([]);
   const [recipeIngredients, setRecipeIngredients] = useState([]);
   const [recipeImage, setRecipeImage] = useState(null);
-  const [book, setBook] = useState([]);
+  const [isBookmarked, setIsBookmarked] = useState(false);
   const [recipeDifficulty, setRecipeDifficulty] = useState();
+
   useEffect(() => {
     const fetchRecipeInfo = async () => {
       try {
@@ -17,8 +18,7 @@ const RecipeMain = ({ navigation, route }) => {
 
         if (recipeDoc.exists) {
           const recipeData = recipeDoc.data();
-          const NameData = recipeData.recipe_name;
-          setRecipeName(NameData);
+          setRecipeName(recipeData.recipe_name);
           setRecipeTime(recipeData.recipe_time);
           setRecipeIngredients(recipeData.recipe_ingredients);
           setRecipeImage(recipeData.recipe_image_url);
@@ -32,27 +32,42 @@ const RecipeMain = ({ navigation, route }) => {
     };
 
     fetchRecipeInfo();
+    fetchUserBookmark();
   }, []);
 
-  const handleBookmarkClick = (buttonName) => {
-    setBook((prevStates) => ({
-      ...prevStates,
-      [buttonName]: !prevStates[buttonName],
-    }));
-  }; 
-
-  const getImageForBookmark = (buttonName) => {
-    if (book[buttonName]) {
-      switch (buttonName) {
-        case 'bookmarkFill':
-          return require('../assets/icons/bookmarkFill.png');
-        default:
-          return require('../assets/icons/bookmark.png');
-      }
-    } 
-    else{
-      return require('../assets/icons/bookmark.png');
+  const fetchUserBookmark = async () => {
+    try {
+      const userId = 'user_id_here'; // 사용자의 ID를 여기에 입력하세요.
+      const userDoc = await firestore().collection('users').doc(userId).get();
+      const userData = userDoc.data();
+      const userBookmarks = userData?.user_bookmark || [];
+      setIsBookmarked(userBookmarks.includes(route.params.recipeId));
+    } catch (error) {
+      console.error('Error fetching user bookmark:', error);
     }
+  };
+
+  const toggleBookmark = async () => {
+    try {
+      const userId = 'user_id_here'; // 사용자의 ID를 여기에 입력하세요.
+      const userRef = firestore().collection('users').doc(userId);
+      const userDoc = await userRef.get();
+      const userBookmarks = userDoc.data()?.user_bookmark || [];
+      const updatedBookmarks = isBookmarked
+        ? userBookmarks.filter(id => id !== route.params.recipeId)
+        : [...userBookmarks, route.params.recipeId];
+
+      await userRef.update({ user_bookmark: updatedBookmarks });
+      setIsBookmarked(!isBookmarked);
+    } catch (error) {
+      console.error('Error toggling bookmark:', error);
+    }
+  };
+
+  const renderIngredients = () => {
+    return Object.entries(recipeIngredients).map(([ingredient, amount], index) => (
+      <Text key={index}>{ingredient}: {amount}</Text>
+    ));
   };
 
   return (
@@ -60,10 +75,11 @@ const RecipeMain = ({ navigation, route }) => {
       <Image source={{ uri: recipeImage }} style={styles.image}/>
 
       <View style={styles.titleContainer}>
-        <TouchableOpacity style={styles.bookmarkButton} onPress={() => handleBookmarkClick('bookmarkFill')}>
-          <Image source={getImageForBookmark('bookmarkFill')}/>
+        <TouchableOpacity style={styles.bookmarkButton} onPress={toggleBookmark}>
+          <Image source={isBookmarked ? require('../assets/icons/bookmarkFill.png') : require('../assets/icons/bookmark.png')}/>
         </TouchableOpacity>
       </View>
+
       <Text>{recipeName}</Text>
       <Text>{recipeTime}</Text>
       <Text>{recipeDifficulty}</Text>
@@ -72,13 +88,15 @@ const RecipeMain = ({ navigation, route }) => {
         <Image source={require('../assets/icons/clock.png')} style={styles.clockIcon}/>
       </View>
 
+      <View style={styles.ingredientsContainer}>
+        {renderIngredients()}
+      </View>
+
       <View style={styles.row}>
         <TouchableOpacity
-          style={{ top: 85, borderWidth: 1, borderColor: '#CCCCCC', paddingVertical: 10, width: 140, borderRadius: 25, marginBottom: 20 }}
+          style={styles.backButton}
           onPress={() => navigation.goBack()}>
-          <Text style={{ color: '#CCCCCC', fontSize: 15, fontWeight: 'bold', textAlign: 'center', fontFamily: 'NanumGothic' }}>
-            뒤로가기
-          </Text>
+          <Text style={styles.buttonText}>뒤로가기</Text>
         </TouchableOpacity>
         
         <TouchableOpacity
@@ -97,27 +115,55 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flex: 1,
     backgroundColor: '#F8F9FA',
-    width: '100%',
-    height: '100%',
+    paddingVertical: 20,
   },
-
-  row: {
+  image: {
+    width: 200,
+    height: 200,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  titleContainer: {
     position: 'absolute',
-    top: 570,
+    top: 10,
+    right: 10,
+  },
+  bookmarkButton: {
+    padding: 10,
+  },
+  timeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  clockIcon: {
+    width: 20,
+    height: 20,
+    marginRight: 5,
+  },
+  ingredientsContainer: {
+    alignItems: 'flex-start',
+    marginBottom: 10,
+  },
+  row: {
     flexDirection: 'row', 
     justifyContent: 'space-evenly',
-    gap: 25,
+    marginTop: 20,
   },
-
-  button: {
-    top: 85,
-    width: 140,
-    backgroundColor: '#FEA655',
+  backButton: {
+    backgroundColor: '#CCCCCC',
     paddingVertical: 10,
+    paddingHorizontal: 20,
     borderRadius: 25,
     marginBottom: 20,
   },
-
+  button: {
+    backgroundColor: '#FEA655',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    marginBottom: 20,
+  },
   buttonText: {
     color: '#fff',
     fontSize: 15,
