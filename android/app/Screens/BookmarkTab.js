@@ -1,21 +1,45 @@
 import React, { useState, useEffect } from 'react';
-import { TouchableOpacity, Image, Text, ScrollView, View, FlatList, StyleSheet } from 'react-native';
+import { TouchableOpacity, Image, Text, View, FlatList, StyleSheet } from 'react-native';
 import firestore from "@react-native-firebase/firestore";
 
 const BookMarkItem = ({ item, navigation }) => {
-    const [book, setBook] = useState({
-        bookmarkFill: false,
-    });
+    const [bookmarkFill, setBookmarkFill] = useState(false);
 
-    const handleBookmarkClick = () => {
-        setBook((prevBook) => ({
-            ...prevBook,
-            bookmarkFill: !prevBook.bookmarkFill,
-        }));
+    const handleBookmarkClick = async () => {
+        const newBookmarkStatus = !bookmarkFill;
+        setBookmarkFill(newBookmarkStatus);
+
+        const userId = 'xxvkRzKqFcWLVx4hWCM8GgQf1hE3';
+
+        try {
+            const userRef = firestore().collection('users').doc(userId);
+            const snapshot = await userRef.get();
+            if (!snapshot.exists) {
+                throw new Error("사용자가 존재하지 않습니다.");
+            }
+
+            const userBookmarkData = snapshot.data();
+            let updatedBookmarks = userBookmarkData.user_bookmark || [];
+
+            const recipeId = item.id;
+            const bookmarkIndex = updatedBookmarks.indexOf(recipeId);
+            if (newBookmarkStatus && bookmarkIndex === -1) {
+                updatedBookmarks.push(recipeId);
+            } else if (!newBookmarkStatus && bookmarkIndex !== -1) {
+                updatedBookmarks.splice(bookmarkIndex, 1);
+            }
+
+            await userRef.update({
+                user_bookmark: updatedBookmarks
+            });
+            console.log('사용자 북마크가 업데이트되었습니다.');
+        } catch (error) {
+            console.error('사용자 북마크를 업데이트하는 중에 오류가 발생했습니다.', error);
+        }
     };
 
     const getImageForBookmark = () => {
-        return book.bookmarkFill 
+        return bookmarkFill 
             ? require('../assets/icons/bookmarkFill.png')
             : require('../assets/icons/bookmark.png');
     };
