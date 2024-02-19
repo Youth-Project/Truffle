@@ -94,6 +94,7 @@ const RecipeMain = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
+    justifyContent: 'center',
     flex: 1,
     backgroundColor: '#F8F9FA',
     width: '100%',
