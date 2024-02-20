@@ -27,6 +27,19 @@ const Ingredients = () => {
       setIsTextInput(false)
     }
   }
+  const [selectedIngredient, setSelectedIngredient] = useState([])
+
+  const updateSelectedIngredient = async() => {
+    try{
+    const ingredientInRef = await showOnRefrigerator();
+    await setSelectedIngredient(ingredientInRef);
+    console.log('showOnOutput: ', ingredientInRef);
+    console.log('updateSelectedIngredient: ', selectedIngredient);
+    }
+    catch(error){
+      console.error('error in front: ', error)
+    }
+  }
   //--모달--\\
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
@@ -225,6 +238,7 @@ const Ingredients = () => {
                           closeModal(); 
                           updateUsersRefrigeratorAddedFromIngredient(inputValue, itemClicked, conversion, foodUnits, foodCategory);
                         }
+                          updateSelectedIngredient();
                           }}>                            
                         <Text style={styles.next}>저장하기</Text>
                     </TouchableOpacity>

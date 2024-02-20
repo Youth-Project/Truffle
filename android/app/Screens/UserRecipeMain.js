@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native';
 import firestore from "@react-native-firebase/firestore";
 
-const RecipeMain = ({ navigation, route }) => {
+const UserRecipeMain = ({ navigation, route }) => {
   const [recipeName, setRecipeName] = useState('');
   const [recipeTime, setRecipeTime] = useState([]);
   const [recipeIngredients, setRecipeIngredients] = useState([]);
@@ -10,19 +10,19 @@ const RecipeMain = ({ navigation, route }) => {
   const [book, setBook] = useState([]);
   const [recipeDifficulty, setRecipeDifficulty] = useState();
   useEffect(() => {
-    const fetchRecipeInfo = async () => {
+    const fetchRecipeInfoU = async () => {
       try {
         const { recipeId } = route.params;
-        const recipeDoc = await firestore().collection('recipes').doc(recipeId).get();
+        const userRecipeDoc = await firestore().collection('users').doc(xxvkRzKqFcWLVx4hWCM8GgQf1hE3).get();
 
         if (recipeDoc.exists) {
-          const recipeData = recipeDoc.data();
-          const NameData = recipeData.recipe_name;
-          setRecipeName(NameData);
-          setRecipeTime(recipeData.recipe_time);
-          setRecipeIngredients(recipeData.recipe_ingredients);
-          setRecipeImage(recipeData.recipe_image);
-          setRecipeDifficulty(recipeData.recipe_difficulty);
+          const uRecipeData = userRecipeDoc.data();
+          const uNameData = uRecipeData.user_recipe_name;
+          setRecipeName(uNameData);
+          setRecipeTime(uRecipeData.user_recipe_time);
+          setRecipeIngredients(uRecipeData.user_recipe_ingredients);
+          setRecipeImage(uRecipeData.user_recipe_image);
+          setRecipeDifficulty(uRecipeData.user_recipe_difficulty);
         } else {
           console.error('Recipe not found!');
         }
@@ -59,20 +59,20 @@ const RecipeMain = ({ navigation, route }) => {
   const getImageForButton = ({recipeDifficulty}) => {
       switch (recipeDifficulty) {
         case 1:
-          return require('../assets/icons/star1.png');
+          return require('./assets/icons/star1.png');
         case 2:
-          return require('../assets/icons/star2.png');
+          return require('./assets/icons/star2.png');
         case 3:
-          return require('../assets/icons/star3.png');
+          return require('./assets/icons/star3.png');
         default:
-          return require('../assets/icons/star1.png');
+          return require('./assets/icons/star1.png');
     } 
   };
 
   {/* 사진없을때 */}
   const photoImage = () => {
   if(recipeImage==''){
-    return require('../assets/icons/photoNotReady.png');
+    return require('./assets/icons/photoNotReady.png');
   }
   else{
     return {uri: recipeImage};
@@ -81,13 +81,13 @@ const RecipeMain = ({ navigation, route }) => {
   
   return (
     <View contentContainerStyle={styles.container}>
-      {/* 사진추가 */}
-      <View
+            {/* 사진추가 */}
+      <TouchableOpacity
         style={{top: 35,
-        marginBottom: 20, 
-        paddingTop: 4, borderRadius: 7, backgroundColor: '#EDEDED', width: 350, height: 139, justifyContent: 'center', alignItems: 'center'}} >
-        <Image source={photoImage()}/>
-      </View>
+    marginBottom: 20, 
+    paddingTop: 4, borderRadius: 7, position: 'absolute', backgroundColor: '#EDEDED', width: 350, height: 139, justifyContent: 'center', alignItems: 'center'}} >
+    <Image source={photoImage()}/>
+    </TouchableOpacity>
 
       <View style={styles.titleContainer}>
         {/* 음식이름 */}
@@ -100,37 +100,44 @@ const RecipeMain = ({ navigation, route }) => {
         </TouchableOpacity>
       </View>
   
-      {/* 재료 & 양 */}
-      <View
+  {/* 재료 & 양 */}
+<View
         style={{ right: 62, top: 190,
         backgroundColor: '#FFFFFF',
-        paddingVertical: 20,
-        width: 215,
-        height: 330,
-        borderRadius: 10, 
-      }}>
-      <Image style={{right: 180, top: 10, zIndex: 2,}} source={require('../assets/icons/bowl.png')}/>
+    paddingVertical: 20,
+    width: 215,
+    height: 330,
+    borderRadius: 10, 
+    }}>
+    <Image style={{right: 180, top: 10, zIndex: 2, position: 'absolute' , }} source={require('./assets/icons/bowl.png')}/>
 
-      <ScrollView>
-        <View style={{flextDirection: 'row',  }}>
-          <View style={{ marginHorizontal: 2, right: 40,alignItems: 'center', top: 2 }}>
-          {/*{recipeIngredients && recipeIngredients.map((ingred, index) => (
-          <Text key={index} style={{color: '#000', marginHorizontal: 2,
-          fontSize: 14, }}>
-          {ingred}
-          </Text> 
-          ))} */}
-          </View>
-        <View style={{ left: 47, alignItems: 'center', }}>
-        {/*{recipeIngredients && recipeIngredients.map((amount, index) => (
-        <Text key={index} style={{ color: '#000', marginHorizontal: 2,
+<ScrollView style={{
+    width: 215,
+    height: 'auto', 
+    top: 20,
+    marginBottom: 20
+    }}>
+  <View style={{flextDirection: 'row',  }}>
+  <View style={{ 
+    marginHorizontal: 2,
+    right: 40,
+    alignItems: 'center',
+    top: 2,
+    }}>
+    <Text style={{color: '#000', marginHorizontal: 2,
+        fontSize: 14, }}>
+{recipeIngredients.ingred}
+    </Text>     
+  </View>
+ <View style={{ left: 47, alignItems: 'center',
+    }}>
+    <Text style={{ color: '#000', marginHorizontal: 2,
         fontSize: 14, bottom: 18 }}>
-        {amount} </Text>
-        ))} */}
-        </View>
-        </View>    
-      </ScrollView>      
-    </View>
+{recipeIngredients.amount} </Text>
+  </View>
+</View>    
+  </ScrollView>      
+      </View>
 
   <View style={{ left: 115, bottom: 140,
         backgroundColor: '#FFFFFF',
@@ -147,19 +154,19 @@ const RecipeMain = ({ navigation, route }) => {
           fontSize: 17, 
           textAlign: 'center',
           bottom: 15
-        }}>{recipeTime[0] !== 0 && `${recipeTime[0]}시간 `}{recipeTime[1] !== 0 && `${recipeTime[1]}분`}{'\n'}이내
+        }}>{recipeTime[0] !== 0 && `${recipeTime[0]}시간 `} {recipeTime[1] !== 0 && `${recipeTime[1]}분`}{'\n'}이내
         </Text>
       </View>
     </View>
 
 {/* 난이도 */}
     <View
-      style={{ left: 115, bottom: 140,
-      backgroundColor: '#FFFFFF',
-      paddingVertical: 5,
-      width: 112,
-      height: 166,
-      borderRadius: 10, }}>
+        style={{ left: 115, bottom: 140,
+        backgroundColor: '#FFFFFF',
+    paddingVertical: 5,
+    width: 112,
+    height: 166,
+    borderRadius: 10, }}
         <Text style={{
           top: 5,
           color: '#000000', 
@@ -173,7 +180,9 @@ const RecipeMain = ({ navigation, route }) => {
         <Image source={getImageForButton({recipeDifficulty})} />
   </View>
   
-  </View>
+    </View>
+        
+
       <View style={styles.row}>
         <TouchableOpacity
           style={{ top: 85, borderWidth: 1, borderColor: '#CCCCCC', paddingVertical: 10, width: 140, borderRadius: 25, marginBottom: 20 }}
@@ -198,9 +207,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     backgroundColor: '#F8F9FA',
-    width: Dimensions.get('window').width,
-    height:Dimensions.get('window').height ,
-  }, 
+    width: '100%',
+    height: '100%',
+  },  
   
   titleContainer: {
     top: 190, right: 130, marginLeft: 10,
@@ -235,6 +244,7 @@ const styles = StyleSheet.create({
   },
 
   clockIcon: {
+    position: 'absolute', 
     left: 315, 
     bottom: 10
   },
@@ -265,4 +275,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RecipeMain;
+export default UserRecipeMain;

@@ -1,15 +1,14 @@
 // AuthFunc.js
 
 import { useState, useEffect } from 'react';
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import { authService } from '../firebaseConfig';
+import firestore from "@react-native-firebase/firestore";
+import auth from '@react-native-firebase/auth';
 
 const useAuth = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = authService.onAuthStateChanged((user) => {
+    const unsubscribe = auth().onAuthStateChanged((user) => {
       if (user) {
         setIsLoggedIn(true);
       } else {

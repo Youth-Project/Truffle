@@ -90,11 +90,8 @@ function DonutChart () {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>
-        지출 통계
-      </Text>
-      <TruffleLogo style={styles.logo}/>
       <View style={styles.chartContainer}>
+      <TruffleLogo style={styles.logo}/>
         <PieChart
           widthAndHeight={200}
           series={series}
@@ -103,7 +100,7 @@ function DonutChart () {
           coverFill={'white'}
         />
         {extraBudget === 0 && (
-          <Text style={styles.warningText}>!예산을 초과했습니다.</Text>
+          <Text style={styles.warningText}>!예산을 초과했습니다</Text>
         )}
       </View>
       <View style={styles.legendContainer}>
@@ -135,11 +132,11 @@ const styles = StyleSheet.create({
   },
   chartContainer: {
     alignItems:'center',
+    justifyContent:'center',
+    marginTop:10,
   },
   logo:{
     position: 'absolute',
-    bottom: 130,
-    left: Dimensions.get('window').width /2.6,
     zIndex:1,
   },
   legendContainer: {

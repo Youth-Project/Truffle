@@ -181,17 +181,13 @@ const calTotal = (btnName) => {
     if (btnName === 'shopping') {
       totalShopping += parseFloat(item);
       setShoppingExpense(totalShopping);
-      console.log('쇼핑 값', shoppingExpense);
     } else if (btnName === 'eatOut') {
       totalEatOut += parseFloat(item);
       setEatOutExpense(totalEatOut);
-      console.log('외식 값', eatOutExpense);
     } else if (btnName === 'delivery') {
       totalDelivery += parseFloat(item);
       setDeliveryExpense(totalDelivery);
-      console.log('배달 값', deliveryExpense);
     }
-    console.log(btnName == 'shopping');
   });
 
 }

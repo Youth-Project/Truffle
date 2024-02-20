@@ -18,7 +18,7 @@ const CreditView = () => {
       <View style={{marginTop:20}}>
         <Text style={styles.HeaderText}>Project Leader</Text>
           <View style={styles.context}>
-            <Text style={styles.contextText}>Sanghyun (Brandon) Kim   | 김상현</Text>
+            <Text style={styles.contextText}>Brandon Kim   | 김상현</Text>
           </View>
       </View>
 
@@ -40,7 +40,7 @@ const CreditView = () => {
         <Text style={styles.HeaderText}>Front-end Developers</Text>
           <View style={[styles.context, {height:100}]}>
             <Text style={styles.contextText}>YongHoon Kim   | 김용훈</Text>
-            <Text style={styles.contextText}>Kyowon Song   | 송교원</Text>
+            <Text style={styles.contextText}>Gyowon Song   | 송교원</Text>
           </View>
       </View>
 
@@ -48,7 +48,7 @@ const CreditView = () => {
         <Text style={styles.HeaderText}>Back-end Developers</Text>
           <View style={[styles.context, {height:100}]}>
             <Text style={styles.contextText}>Hongku Bae   | 배홍구</Text>
-            <Text style={styles.contextText}>Sanghyun (Brandon) Kim   | 김상현</Text>
+            <Text style={styles.contextText}>Brandon Kim   | 김상현</Text>
           </View>
       </View>
 
@@ -88,9 +88,10 @@ const styles = StyleSheet.create({
   },
   context:{
     width: Dimensions.get('window').width-60,
-    height:60,
+    height:40,
     backgroundColor: 'white',
     borderRadius:8,
+    marginTop:5
   },
   HeaderText:{
     fontSize:16,
@@ -98,10 +99,8 @@ const styles = StyleSheet.create({
   },
   contextText:{
     fontSize:16,
-    padding:10,
-    marginTop:5
-  },
-
+    padding:8,
+  }
 })
 
 export default CreditView;

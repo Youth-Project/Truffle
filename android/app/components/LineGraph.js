@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, ScrollView } from 'react-native';
 import { LineChart } from "react-native-chart-kit";
 import { Dropdown } from 'react-native-element-dropdown';
 import moment from 'moment';
@@ -40,8 +40,8 @@ const LineGraph = () => {
         const data3Labels = [];
         const data3Values = [];
         for (let i = 0; i < 3; i++) {
-          const month = currentMonth - i ;
-          const year = currentYear - (month <= 0 ? 1 : 0);
+          const month = currentMonth - i  + (currentMonth - i <= 0 ? 12 : 0);
+          const year = currentYear - (currentMonth - i <= 0 ? 1 : 0);
           const label = `${year}-${String(month).padStart(2, '0')}`;
           data3Labels.push(label.split('-')[1]);
           const eatOut = userData.eatOut[label] || 0;
@@ -67,7 +67,7 @@ const LineGraph = () => {
         const data6Values = [];
         for (let i = 0; i < 6; i++) {
           const month = currentMonth - i + (currentMonth - i <= 0 ? 12 : 0);
-          const year = currentYear - (month <= 0 ? 1 : 0);
+          const year = currentYear - (currentMonth - i <= 0 ? 1 : 0);
           const label = `${year}-${String(month).padStart(2, '0')}`;
           data6Labels.push(label.split('-')[1]);
           const monthData = userData[label];
@@ -93,7 +93,7 @@ const LineGraph = () => {
         const data12Values = [];
         for (let i = 0; i < 12; i++) {
           const month = currentMonth - i + (currentMonth - i <= 0 ? 12 : 0);
-          const year = currentYear - (month <= 0 ? 1 : 0);
+          const year = currentYear - (currentMonth - i <= 0 ? 1 : 0);
           const label = `${year}-${String(month).padStart(2, '0')}`;
           data12Labels.push(label.split('-')[1]);
           const monthData = userData[label];
@@ -157,13 +157,26 @@ const LineGraph = () => {
   const renderDropdown = () => {
     switch (value) {
       case '1':
-        return data1 ? <LineChart data={data1} width={380} height={220} withVerticalLines={false} chartConfig={chartConfig} bezier /> : null;
+        return data1 ? 
+        <ScrollView horizontal={true}>
+        <LineChart data={data1} width={380} height={220} withVerticalLines={false} chartConfig={chartConfig} bezier />
+        </ScrollView>
+        : null;
       case '3':
-        return data3 ? <LineChart data={data3} width={450} height={220} withVerticalLines={false} chartConfig={chartConfig} bezier /> : null;
+        return data3 ?
+        <ScrollView horizontal={true}>
+          <LineChart data={data3} width={450} height={220} withVerticalLines={false} chartConfig={chartConfig} bezier />
+          </ScrollView> : null;
       case '6':
-        return data6 ? <LineChart data={data6} width={450} height={220} withVerticalLines={false} chartConfig={chartConfig} bezier /> : null;
+        return data6 ?
+        <ScrollView horizontal={true}>
+          <LineChart data={data6} width={450} height={220} withVerticalLines={false} chartConfig={chartConfig} bezier />
+          </ScrollView> : null;
       case '12':
-        return data12 ? <LineChart data={data12} width={450} height={220} withVerticalLines={false} chartConfig={chartConfig} bezier /> : null;
+        return data12 ?
+        <ScrollView horizontal={true}>
+          <LineChart data={data12} width={450} height={220} withVerticalLines={false} chartConfig={chartConfig} bezier />
+          </ScrollView> : null;
       default:
         return null;
     }
@@ -172,9 +185,6 @@ const LineGraph = () => {
   return (
     <View style={styles.container}>
       <View style={{flexDirection: 'row',}}>
-        <Text style={styles.Texts}>
-          지출 추이
-        </Text>
         <View style={styles.dropdown_container}>
           <Dropdown
             style={styles.dropdown}
@@ -216,7 +226,7 @@ const styles = StyleSheet.create({
   },
 
   dropdown_container: {
-    marginLeft: 160,
+    marginLeft: 210,
     width: 130,
     height: 30,
     zIndex: 1000,

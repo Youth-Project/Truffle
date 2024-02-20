@@ -2,50 +2,40 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal, Image,
   Animated, TouchableWithoutFeedback, Dimensions, PanResponder, TextInput,} from 'react-native';
-import  {  vegetable, bread, fruit, sausage, seafood, truffle, noodle, spice, bean, grain, meat, milk, selected }  from '../components/IngredientsArray';
 import BottomSheet from '../components/BottomSheet';
-import EditIngredientsIcon from "../assets/icons/EditIngredientsIcon";
 import RefTruffleLogo from "../assets/logo/RefTruffleLogo";
-import DbFunc from "../BackFunc/DbFunc";
-import { updateUsersRefrigeratorAddedFromIngredient, showOnRefrigerator, fetchUserRefrigerator, fetchIngredient, getAndUpdateFinishedRecipesIngredient, fetchRecipeAll } from '../BackFunc/RecipeFunc'; 
-import firestore from "@react-native-firebase/firestore";
+import { updateUsersRefrigeratorAddedFromIngredient, showOnRefrigerator } from '../BackFunc/RecipeFunc'; 
 
 const RefTab = () => {
-  const [isItem, setIsItem] = useState(true);
-  const checkItem = () =>{
-  }
-  // const data = db.collection.showOnRefrigerator.get();
-  const [showUserRef, setShowUserRef] = useState();
-  
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = showOnRefrigerator();
-      setShowUserRef(Object.values(data));
+  const [isItem, setIsItem] = useState(false);
+
+    const checkIsItem = (array) => {
+       array.length > 0 ? setIsItem(true) : setIsItem(false);
     };
     
-    fetchData();
-  }, []); 
-
-  console.log("ddddd" + showUserRef)
-  // const [vegetableArray, changeVegetable] = useState(vegetable);
-  // const [breadArray, changeBread] = useState(bread);
-  // const [fruitArray, changeFruit] = useState(fruit);
-  // const [sausageArray, changeSausage] = useState(sausage);
-  // const [seafoodArray, changeSeafood] = useState(seafood);
-  // const [truffleArray, changetruffle] = useState(truffle);
-  // const [noodleArray, changeNoodle] = useState(noodle);
-  // const [spiceArray, changeSpice] = useState(spice);
-  // const [beanArray, changeBean] = useState(bean);
-  // const [grainArray, changeGrain] = useState(grain);
-  // const [meatArray, changeMeat] = useState(meat);
-  // const [milkArray, changeMilk] = useState(milk);
-  const [selectedFood, changeSelectedFood] = useState(selected);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
   const [conversion, setConversion] = useState('');
   const [itemClicked,setItemClicked] = useState();
   const [isInputSet,setIsInputSet] = useState(false);
-  const [foodCategory,setFoodCategory] =useState('');
+  const [foodCategory,setFoodCategory] = useState('');
+  const [selectedIngredient, setSelectedIngredient] = useState([])
+
+  const updateSelectedIngredient = async() => {
+    try{
+      checkIsItem(selectedIngredient);
+      const ingredientInRef = await showOnRefrigerator();
+      updateUsersRefrigeratorAddedFromIngredient(inputValue, itemClicked, conversion, foodUnits, foodCategory);
+      setSelectedIngredient(ingredientInRef);
+    }
+    catch(error){
+      console.error('error in front: ', error)
+    }
+  }
+  
+  useEffect(() => {
+    updateSelectedIngredient();
+  });
   
   const isValidInput = (inputValue) =>{
       inputValue.trim()===''?setIsInputSet(true):setIsInputSet(false);
@@ -73,9 +63,11 @@ const RefTab = () => {
   const pressButton = () => {
       setModalVisible(true);
   };
+
   const pressButton2 = () => {
       setModalVisible2(true);
   };
+
     const screenHeight = Dimensions.get("screen").height;
     const panY = useRef(new Animated.Value(screenHeight)).current;
     const translateY = panY.interpolate({
@@ -121,6 +113,7 @@ const RefTab = () => {
         closeBottomSheet.start(()=>{
             setModalVisible(false);
         })
+        updateSelectedIngredient();
     }
     const [inputValue, setInputValue] = useState('');
 
@@ -146,16 +139,16 @@ const RefTab = () => {
           </View>
         </View>
       )}
+
       {isItem && (
         <View style={styles.container}>
           <View style={styles.foodCont}>
             <ScrollView style={{ gap: 11, width:'85%' }}>
-              {/* <View style={styles.foods}> */}
               <View>
-                  {selectedFood && selectedFood.map((food, index) => (
+                  {selectedIngredient && selectedIngredient.map((food, index) => (
                     <View key={index} style={styles.foods}>
                       <View style={styles.circle}>
-                        <Image source={food.image} />
+                      <Image source={{ uri: food.image }} />
                       </View>
                       <Text style={styles.foodName}>{food.name}</Text>
                       <Text style={styles.foodCount}>{food.weight}</Text>
@@ -173,11 +166,11 @@ const RefTab = () => {
                     </View>
                   ))}
                 </View>
-              {/* </View> */}
             </ScrollView>
           </View>
         </View>
       )}
+
        <Modal
             visible={modalVisible}
             animationType={"fade"}
@@ -248,7 +241,7 @@ const RefTab = () => {
                         <TouchableOpacity style= {styles.nextButton} onPress={()=>{
                          if (!isValidInput(inputValue)) { 
                           closeModal(); 
-                          updateUsersRefrigeratorAddedFromIngredient(inputValue, itemClicked, conversion, foodUnits, foodCategory);
+                          updateSelectedIngredient();
                         }
                           }}>
                             <Text style={styles.next}>다음</Text>
@@ -311,7 +304,6 @@ const styles = StyleSheet.create({
   imgContainer: {
     width: 156,
     height: 156,
-    backgroundColor: 'purple',
     marginTop: '65%',
   },
   statusText: {
@@ -393,7 +385,8 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: 'purple'
   },
   bottomSheetContent: {
     backgroundColor: '#F8F9FA',
@@ -489,7 +482,6 @@ const styles = StyleSheet.create({
   },
   unitSelect:{
       fontSize: 15,
-      // backgroundColor: 'purple',
       width: 40,
       height: 40,
       display: 'flex',
