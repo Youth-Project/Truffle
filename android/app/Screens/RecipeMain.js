@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native';
 import firestore from "@react-native-firebase/firestore";
 
 const RecipeMain = ({ navigation, route }) => {
@@ -7,8 +7,9 @@ const RecipeMain = ({ navigation, route }) => {
   const [recipeTime, setRecipeTime] = useState([]);
   const [recipeIngredients, setRecipeIngredients] = useState([]);
   const [recipeImage, setRecipeImage] = useState(null);
-  const [book, setBook] = useState([]);
+  const [isBookmarked, setIsBookmarked] = useState(false);
   const [recipeDifficulty, setRecipeDifficulty] = useState();
+
   useEffect(() => {
     const fetchRecipeInfo = async () => {
       try {
@@ -17,11 +18,10 @@ const RecipeMain = ({ navigation, route }) => {
 
         if (recipeDoc.exists) {
           const recipeData = recipeDoc.data();
-          const NameData = recipeData.recipe_name;
-          setRecipeName(NameData);
+          setRecipeName(recipeData.recipe_name);
           setRecipeTime(recipeData.recipe_time);
           setRecipeIngredients(recipeData.recipe_ingredients);
-          setRecipeImage(recipeData.recipe_image);
+          setRecipeImage(recipeData.recipe_image_url);
           setRecipeDifficulty(recipeData.recipe_difficulty);
         } else {
           console.error('Recipe not found!');
@@ -32,155 +32,71 @@ const RecipeMain = ({ navigation, route }) => {
     };
 
     fetchRecipeInfo();
+    fetchUserBookmark();
   }, []);
 
-  const handleBookmarkClick = (buttonName) => {
-    setBook((prevStates) => ({
-      ...prevStates,
-      [buttonName]: !prevStates[buttonName],
-    }));
-  }; 
-
-  const getImageForBookmark = (buttonName) => {
-    if (book[buttonName]) {
-      switch (buttonName) {
-        case 'bookmarkFill':
-          return require('../assets/icons/bookmarkFill.png');
-        default:
-          return require('../assets/icons/bookmark.png');
-      }
-    } 
-    else{
-      return require('../assets/icons/bookmark.png');
+  const fetchUserBookmark = async () => {
+    try {
+      const userId = 'user_id_here'; // 사용자의 ID를 여기에 입력하세요.
+      const userDoc = await firestore().collection('users').doc(userId).get();
+      const userData = userDoc.data();
+      const userBookmarks = userData?.user_bookmark || [];
+      setIsBookmarked(userBookmarks.includes(route.params.recipeId));
+    } catch (error) {
+      console.error('Error fetching user bookmark:', error);
     }
   };
 
+  const toggleBookmark = async () => {
+    try {
+      const userId = 'user_id_here'; // 사용자의 ID를 여기에 입력하세요.
+      const userRef = firestore().collection('users').doc(userId);
+      const userDoc = await userRef.get();
+      const userBookmarks = userDoc.data()?.user_bookmark || [];
+      const updatedBookmarks = isBookmarked
+        ? userBookmarks.filter(id => id !== route.params.recipeId)
+        : [...userBookmarks, route.params.recipeId];
 
-  const getImageForButton = ({recipeDifficulty}) => {
-      switch (recipeDifficulty) {
-        case 1:
-          return require('../assets/icons/star1.png');
-        case 2:
-          return require('../assets/icons/star2.png');
-        case 3:
-          return require('../assets/icons/star3.png');
-        default:
-          return require('../assets/icons/star1.png');
-    } 
+      await userRef.update({ user_bookmark: updatedBookmarks });
+      setIsBookmarked(!isBookmarked);
+    } catch (error) {
+      console.error('Error toggling bookmark:', error);
+    }
   };
 
-  {/* 사진없을때 */}
-  const photoImage = () => {
-  if(recipeImage==''){
-    return require('../assets/icons/photoNotReady.png');
-  }
-  else{
-    return {uri: recipeImage};
-  }
-};
-  
+  const renderIngredients = () => {
+    return Object.entries(recipeIngredients).map(([ingredient, amount], index) => (
+      <Text key={index}>{ingredient}: {amount}</Text>
+    ));
+  };
+
   return (
-    <View contentContainerStyle={styles.container}>
-      {/* 사진추가 */}
-      <View
-        style={{top: 35,
-        marginBottom: 20, 
-        paddingTop: 4, borderRadius: 7, backgroundColor: '#EDEDED', width: 350, height: 139, justifyContent: 'center', alignItems: 'center'}} >
-        <Image source={photoImage()}/>
-      </View>
+    <ScrollView contentContainerStyle={styles.container}>
+      <Image source={{ uri: recipeImage }} style={styles.image}/>
 
       <View style={styles.titleContainer}>
-        {/* 음식이름 */}
-        <Text style={{color: '#000', marginHorizontal: 5,
-        textDecorationLine: 'underline', textDecorationColor: '#FEA655', fontSize: 20, 
-        }}>{recipeName}</Text>
-  
-        <TouchableOpacity style={styles.bookmarkButton} onPress={() => handleBookmarkClick('bookmarkFill')}>
-          <Image source={getImageForBookmark('bookmarkFill')}/>
+        <TouchableOpacity style={styles.bookmarkButton} onPress={toggleBookmark}>
+          <Image source={isBookmarked ? require('../assets/icons/bookmarkFill.png') : require('../assets/icons/bookmark.png')}/>
         </TouchableOpacity>
       </View>
-  
-      {/* 재료 & 양 */}
-      <View
-        style={{ right: 62, top: 190,
-        backgroundColor: '#FFFFFF',
-        paddingVertical: 20,
-        width: 215,
-        height: 330,
-        borderRadius: 10, 
-      }}>
-      <Image style={{right: 180, top: 10, zIndex: 2,}} source={require('../assets/icons/bowl.png')}/>
 
-      <ScrollView>
-        <View style={{flextDirection: 'row',  }}>
-          <View style={{ marginHorizontal: 2, right: 40,alignItems: 'center', top: 2 }}>
-          {/*{recipeIngredients && recipeIngredients.map((ingred, index) => (
-          <Text key={index} style={{color: '#000', marginHorizontal: 2,
-          fontSize: 14, }}>
-          {ingred}
-          </Text> 
-          ))} */}
-          </View>
-        <View style={{ left: 47, alignItems: 'center', }}>
-        {/*{recipeIngredients && recipeIngredients.map((amount, index) => (
-        <Text key={index} style={{ color: '#000', marginHorizontal: 2,
-        fontSize: 14, bottom: 18 }}>
-        {amount} </Text>
-        ))} */}
-        </View>
-        </View>    
-      </ScrollView>      
-    </View>
-
-  <View style={{ left: 115, bottom: 140,
-        backgroundColor: '#FFFFFF',
-    paddingVertical: 5,
-    width: 112,
-    height: 150,
-    borderRadius: 10,
-    marginBottom: 15, }}>
+      <Text>{recipeName}</Text>
+      <Text>{recipeTime}</Text>
+      <Text>{recipeDifficulty}</Text>
+      
       <View style={styles.timeContainer}>
         <Image source={require('../assets/icons/clock.png')} style={styles.clockIcon}/>
-        {/* 시간 */}
-        <Text style={{
-          color: '#000', 
-          fontSize: 17, 
-          textAlign: 'center',
-          bottom: 15
-        }}>{recipeTime[0] !== 0 && `${recipeTime[0]}시간 `}{recipeTime[1] !== 0 && `${recipeTime[1]}분`}{'\n'}이내
-        </Text>
       </View>
-    </View>
 
-{/* 난이도 */}
-    <View
-      style={{ left: 115, bottom: 140,
-      backgroundColor: '#FFFFFF',
-      paddingVertical: 5,
-      width: 112,
-      height: 166,
-      borderRadius: 10, }}>
-        <Text style={{
-          top: 5,
-          color: '#000000', 
-        fontSize: 18, 
-        textAlign: 'center',
-        }}>
-        난이도</Text>
-  {/* 별컴포넌트 */}
-  <View style={{width: 24, height: 24, backgroundColor: 'transparent', marginLeft: 10, marginTop: 50, }}
-        onPress={() => handleSmallButtonClick({recipeDifficulty})}        >
-        <Image source={getImageForButton({recipeDifficulty})} />
-  </View>
-  
-  </View>
+      <View style={styles.ingredientsContainer}>
+        {renderIngredients()}
+      </View>
+
       <View style={styles.row}>
         <TouchableOpacity
-          style={{ top: 85, borderWidth: 1, borderColor: '#CCCCCC', paddingVertical: 10, width: 140, borderRadius: 25, marginBottom: 20 }}
+          style={styles.backButton}
           onPress={() => navigation.goBack()}>
-          <Text style={{ color: '#CCCCCC', fontSize: 15, fontWeight: 'bold', textAlign: 'center', fontFamily: 'NanumGothic' }}>
-            뒤로가기
-          </Text>
+          <Text style={styles.buttonText}>뒤로가기</Text>
         </TouchableOpacity>
         
         <TouchableOpacity
@@ -189,73 +105,65 @@ const RecipeMain = ({ navigation, route }) => {
           <Text style={styles.buttonText}>조리하기</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
+    justifyContent: 'center',
     flex: 1,
     backgroundColor: '#F8F9FA',
-    width: Dimensions.get('window').width,
-    height:Dimensions.get('window').height ,
-  }, 
-  
-  titleContainer: {
-    top: 190, right: 130, marginLeft: 10,
-    backgroundColor: '#FFFFFF',
+    paddingVertical: 20,
+  },
+  image: {
+    width: 200,
+    height: 200,
     borderRadius: 10,
-    paddingLeft: 6, 
-    paddingRight: 6, 
-    paddingTop: 7, 
-    paddingBottom: 7, 
-    marginBottom: 17, 
+    marginBottom: 10,
   },
-
-  bookmarkButton: {
-    position: 'absolute', 
-    left: 315, 
-    bottom: 10
-  },
-
-  timeContainer: {
-    flexDirection: 'row', 
-    justifyContent: 'center', 
-    top: 78,
-    color: '#000',
-  },
-
-  
-  timeContainer: {
-    flexDirection: 'row', 
-    justifyContent: 'center', 
-    top: 78,
-    color: '#000',
-  },
-
-  clockIcon: {
-    left: 315, 
-    bottom: 10
-  },
-  
-  row: {
+  titleContainer: {
     position: 'absolute',
-    top: 530,
+    top: 10,
+    right: 10,
+  },
+  bookmarkButton: {
+    padding: 10,
+  },
+  timeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  clockIcon: {
+    width: 20,
+    height: 20,
+    marginRight: 5,
+  },
+  ingredientsContainer: {
+    alignItems: 'flex-start',
+    marginBottom: 10,
+  },
+  row: {
     flexDirection: 'row', 
     justifyContent: 'space-evenly',
-    gap: 25,
+    marginTop: 20,
   },
-
-  button: {
-    top: 85,
-    width: 140,
-    backgroundColor: '#FEA655',
+  backButton: {
+    backgroundColor: '#CCCCCC',
     paddingVertical: 10,
+    paddingHorizontal: 20,
     borderRadius: 25,
     marginBottom: 20,
   },
-
+  button: {
+    backgroundColor: '#FEA655',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    marginBottom: 20,
+  },
   buttonText: {
     color: '#fff',
     fontSize: 15,
