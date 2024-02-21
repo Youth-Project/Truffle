@@ -6,7 +6,7 @@ const DetailList = ({ countList }) => {
   let s=0
   
   return (
-    <View>
+    <View style={{gap: 10}}>
       {countList && countList.map((item, i) => (
         <View key={i}>
 
@@ -48,53 +48,55 @@ function AddProgress({navigation}) {
           <ScrollView style={styles.cookScrollContainer}>
           {/*<ScrollView style={{top: 100, height: 'auto'}}> */}
           <View style={{ margin: 4, alignItems: 'center'}}>
-          <DetailList countList={countList} />
+            <DetailList countList={countList} />
  
-          <TouchableOpacity
-          style={{ alignItems: 'center',
-          backgroundColor: '#FFFFFF',
-          marginTop: 10,
-          borderWidth: 1,
-          borderColor: '#CCCCCC',
-          paddingVertical: 5,
-          width: 110,
-          borderRadius: 9, }}
-          onPress={onAddDetailDiv}>
-          <Text style={styles.addText}>+ 과정추가</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={{ alignItems: 'center',
+              backgroundColor: '#FFFFFF',
+              marginTop: 10,
+              borderWidth: 1,
+              borderColor: '#CCCCCC',
+              paddingVertical: 5,
+              width: 110,
+              borderRadius: 9, }}
+              onPress={onAddDetailDiv}>
+              <Text style={styles.addText}>+ 과정추가</Text>
+            </TouchableOpacity>
           </View>
           </ScrollView> 
-
-        <View style={styles.row}>
-        <TouchableOpacity
-         style={{ top: 85,
-          backgroundColor: '#F8F9FA',
-          borderWidth: 1,
-          borderColor: '#CCCCCC',
-          paddingVertical: 10,
-          width: 140,
-          borderRadius: 25,
-          marginBottom: 20, }}
-          onPress={() => navigation.goBack()}>
- 
-        <Text style={{
-          color: '#CCCCCC', 
-          fontSize: 15, 
-          fontWeight: 'bold',
-          textAlign: 'center',
-          fontFamily: 'NanumGothic' 
-        }}>
-        뒤로가기</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate('Login')}>
-          <Text style={styles.buttonText}>레시피 등록</Text>
-        </TouchableOpacity>
-        </View>
        </View>
     </ScrollView>
+    <View style={{backgroundColor: '#F8F9FA', width: 500, height: 100, position: 'absolute', top: 640}}></View>
+    <View style={styles.row}>
+              <TouchableOpacity
+              style={{ top: 85,
+                backgroundColor: '#F8F9FA',
+                borderWidth: 1,
+                borderColor: '#CCCCCC',
+                paddingVertical: 10,
+                width: 140,
+                borderRadius: 25,
+                marginBottom: 20, }}
+                onPress={() => navigation.goBack()}>
+                <Text style={{
+                  color: '#CCCCCC', 
+                  fontSize: 15, 
+                  fontWeight: 'bold',
+                  textAlign: 'center',
+                  fontFamily: 'NanumGothic',
+                }}>
+                 뒤로가기</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => navigation.navigate('RecipeTab')}>
+                <Text style={styles.buttonText}>레시피 등록</Text>
+              </TouchableOpacity>
+          </View>
+          
   </SafeAreaView>
+  
+  
   );
 }
 
@@ -102,17 +104,20 @@ function AddProgress({navigation}) {
 const styles = StyleSheet.create({
   container: {
     width: Dimensions.get('window').width,
-    height:Dimensions.get('window').height,
+    height: '100%',
     alignItems: 'center',
     flex: 1,
-    backgroundColor: '#F8F9FA', // 배경색상 추가
+    backgroundColor: '#F8F9FA',
+    // backgroundColor: 'purple', // 배경색상 추가
   },
   row: {
     position: 'absolute',
     top: 570,
-    flexDirection: 'row', 
+    flexDirection: 'row',
     justifyContent: 'space-evenly',
-    gap: 25,
+    gap: 5,
+    width: '100%',
+    alignItems: 'center',
   },
   button: {
     top: 85,
@@ -144,7 +149,7 @@ const styles = StyleSheet.create({
   },
   cookText:{
     fontSize: 20,
-    top: 80,
+    top: 30,
     right: 240,
     fontWeight: 'bold',
     color: '#000',
@@ -162,10 +167,10 @@ const styles = StyleSheet.create({
   
   },
   cookScrollContainer:{
-    top: 138,
+    top: 100,
     backgroundColor: '#F8F9FA', // 배경색상 추가
-    height: 'auto',
-    marginBottom: 280,
+    height: '50%',
+    marginBottom: 250,
   },
   addText:{
     color: '#CCCCCC', 
