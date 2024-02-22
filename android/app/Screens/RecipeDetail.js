@@ -44,7 +44,7 @@ const RecipeDetail = ({ navigation, route }) => {
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView >
     <ScrollView>
     <View style={styles.container}>
       <View style={styles.header}>
@@ -62,19 +62,7 @@ const RecipeDetail = ({ navigation, route }) => {
           </View>
         ))}
       </View>
-
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.goBack()}>
-          <Text style={styles.buttonText}>뒤로가기</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => setModalVisible(true)}>
-          <Text style={styles.buttonText}>조리완료</Text>
-        </TouchableOpacity>
-      </View>
+      
       <Modal
         animationType="slide"
         transparent={true}
@@ -102,6 +90,35 @@ const RecipeDetail = ({ navigation, route }) => {
       </Modal>
     </View>
     </ScrollView>
+    <View style={{backgroundColor: '#F8F9FA', width: 500, height: 100, position: 'absolute', top: 640}}></View>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={{top: 85,
+            backgroundColor: '#F8F9FA',
+            borderWidth: 1,
+            borderColor: '#CCCCCC',
+            paddingVertical: 10,
+            width: 140,
+            borderRadius: 25,
+            marginBottom: 20, }}
+          onPress={() => navigation.goBack()}>
+          <Text style={{color: '#CCCCCC', 
+                  fontSize: 15, 
+                  fontWeight: 'bold',
+                  textAlign: 'center',
+                  fontFamily: 'NanumGothic'}}>뒤로가기</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{top: 85, width: 140,
+            backgroundColor: '#FEA655',
+            paddingVertical: 10,
+            borderRadius: 25,
+            marginBottom: 20,}}
+          onPress={() => setModalVisible(true)}>
+          <Text style={styles.buttonText}>조리완료</Text>
+        </TouchableOpacity>
+      </View>
+      
     </SafeAreaView>
   );
 };
@@ -110,6 +127,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F8F9FA',
+    marginBottom: 85
   },
   header: {
     backgroundColor: '#FFFFFF',
@@ -120,7 +138,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'flex-end',
-    marginTop: 50,
+    marginTop: 30,
     marginRight: 280,
   },
   headerText: {
@@ -156,17 +174,14 @@ const styles = StyleSheet.create({
     fontSize: 12,
     flexShrink: 1,
   },
-  buttonContainer: {
+  buttonContainer: { 
+    position: 'absolute',
+    top: 570,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    marginBottom: 20,
-    marginTop:20
-  },
-  button: {
-    backgroundColor: '#FEA655',
-    paddingVertical: 10,
-    paddingHorizontal: 30,
-    borderRadius: 25,
+    gap: 5,
+    width: '100%',
+    alignItems: 'center',
   },
   buttonText: {
     color: '#fff',
