@@ -17,8 +17,8 @@ const BookMarkItem = ({ item, navigation }) => {
 
     const getImageForBookmark = () => {
         return book.bookmarkFill 
-            ? require('../assets/icons/bookmark.png')
-            : require('../assets/icons/bookmarkFill.png');
+            ? require('../assets/icons/bookmarkFill.png')
+            : require('../assets/icons/bookmark.png');
     };
 
     const photoImage = (recipeImage) => {
@@ -42,9 +42,10 @@ const BookMarkItem = ({ item, navigation }) => {
                 <Text style={styles.foodText}>{item.name}</Text>
                 <View style={{ left: 12, top: 15 }}>
                     <TouchableOpacity 
-                        style={[ styles.book, { backgroundColor: book.bookmarkFill? 'grey' : 'white' }]} 
+                        style={[ styles.book, { backgroundColor: book.bookmarkFill? 'white' : 'white' }]} 
                         onPress={handleBookmarkClick}
                     >
+                            <Image source={getImageForBookmark('bookmark')} />
                     </TouchableOpacity>
                 </View>
                 <View style={{ top: 13, marginLeft: 5, left: 7, flexDirection: 'row' }}>
@@ -151,13 +152,12 @@ const styles = StyleSheet.create({
         fontFamily: 'NanumGothic',
     },
     book: {
-        position: 'absolute', bottom: 1,
-                        left: 110,
-                        borderWidth: 1,
-                        borderRadius: 25,
-                        width: 18,
-                        height: 18,
-                        borderColor: 'grey',
+        position: 'absolute', 
+        bottom: 1,
+        left: 110,
+        width: 16,
+        height: 20,
+        borderColor: 'grey',
     }
 });
 
