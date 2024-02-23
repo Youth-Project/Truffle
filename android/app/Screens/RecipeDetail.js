@@ -158,8 +158,8 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     gap: 12,
-    paddingTop: 20,
-    paddingBottom: 20,
+    paddingTop: 23,
+    paddingBottom: 23,
     paddingLeft: 15,
     paddingRight: 15,
     width: 350,
@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
     left: 0,
   },
   stepText: {
-    fontSize: 12,
+    fontSize: 13,
     flexShrink: 1,
   },
   buttonContainer: { 
