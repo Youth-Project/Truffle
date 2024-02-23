@@ -23,7 +23,7 @@ const BookMarkItem = ({ item, navigation }) => {
 
     const photoImage = (recipeImage) => {
         if(recipeImage==''){
-        return require('./assets/photoNotReady.png');
+        return require('../assets/icons/photoNotReady.png');
       }
       else{
         return {uri: recipeImage};
