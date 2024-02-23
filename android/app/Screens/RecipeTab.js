@@ -122,6 +122,7 @@ const [my, setMy] = useState({
       ...prevStates,
       [buttonName]: !prevStates[buttonName],
     }));
+    navigation.navigate('UserRecipeTab');
   }; 
 
   const getImageForCheckbox = (buttonName) => {
@@ -247,6 +248,26 @@ const getImageForBookmark = () => {
         </View>
       </View>
 
+{/* 내 레시피만 보기 */}
+<View style={{flexDirection: 'row', marginTop: 10, gap: 4, marginLeft: 10}}>
+  {/* 레시피 도움말 i버튼 */}
+  <TouchableOpacity
+        style={styles.infoBtn}
+        onPress={() => setModalVisible(true)}>
+        <Text style={styles.infoTxt}>i</Text>
+      </TouchableOpacity>
+        <Text style={{ fontSize: 10}}>
+          내가 만든 레시피만 보기
+        </Text>
+    <TouchableOpacity onPress={() => handleCheckboxClick('checkFill')}>
+        <Image source={getImageForCheckbox('checkFill')}/>
+    </TouchableOpacity>
+
+      {/* 조리가능 순 */}
+<TouchableOpacity onPress={() => handleSmallButtonClick('button2')} style={{ border: 'none', backgroundColor: 'transparent', left: 120, }}>
+          <Image source={getImageForButton('button2')}/>
+        </TouchableOpacity>
+
   {/* 동그라미 추가 버튼 */}
       <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('AddRecipeMain')}>
         <Text style={{color: 'white', textAlign: 'center', fontSize: 47, bottom: 7, }}>+</Text>
@@ -279,7 +300,7 @@ const getImageForBookmark = () => {
         <TouchableOpacity
               onPress={() => handleToggleBookmark(recipe.id)}
               style={[styles.bookmarkButton, { backgroundColor: isBookmarked(recipe.id) ? 'white' : 'white' }]}>
-              <Image source={isBookmarked(recipe.id) ? require('./assets/bookmark.png') : require('./assets/bookmarkFill.png')}/>
+              <Image source={isBookmarked(recipe.id) ? require('../assets/icons/bookmark.png') : require('../assets/icons/bookmarkFill.png')}/>
         </TouchableOpacity>
             </TouchableOpacity>
           ))}
@@ -395,11 +416,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40, 
     paddingBottom: 80, 
     gap: 20,
-    marginTop: 10
+    //marginTop: 10
   
   },
   searchWrapper:{
-    top: 7,
+    //top: 7,
     width: 299,
     height: 48,
     borderRadius: 15,  
