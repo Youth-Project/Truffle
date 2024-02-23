@@ -17,8 +17,8 @@ const BookMarkItem = ({ item, navigation }) => {
 
     const getImageForBookmark = () => {
         return book.bookmarkFill 
-            ? require('../assets/icons/bookmarkFill.png')
-            : require('../assets/icons/bookmark.png');
+            ? require('../assets/icons/bookmark.png')
+            : require('../assets/icons/bookmarkFill.png');
     };
 
     const photoImage = (recipeImage) => {
