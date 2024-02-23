@@ -21,6 +21,15 @@ const BookMarkItem = ({ item, navigation }) => {
             : require('../assets/icons/bookmarkFill.png');
     };
 
+    const photoImage = (recipeImage) => {
+        if(recipeImage==''){
+        return require('./assets/photoNotReady.png');
+      }
+      else{
+        return {uri: recipeImage};
+      }
+    };
+
     return (
         
         <View style={{ alignItems: 'center', margin: 10}}>
@@ -28,11 +37,7 @@ const BookMarkItem = ({ item, navigation }) => {
             style={styles.post}
             onPress={() => navigation.navigate('RecipeDetail', { recipeId: item.id })}>
             <View style={{width: 132, height: 70, left: 12, top: 9, borderRadius: 7, backgroundColor: '#ccc', alignItems: 'center', justifyContent: 'center'}}>
-                <Image
-                source={{ uri: item.image }}
-                defaultSource={require('../assets/icons/photoNotReady.png')}
-                style={{ width: 120, height: 60 }}
-                />
+                <Image source={photoImage(item.image)} style={{width: 120, height: 60, }}/>
             </View>
                 <Text style={styles.foodText}>{item.name}</Text>
                 <View style={{ left: 12, top: 15 }}>
