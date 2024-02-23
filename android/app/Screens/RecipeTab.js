@@ -100,12 +100,12 @@ const handleSortOrder = async (orderType) => {
   }
 };
 
-const photoImage = () => {
-  if(recipe.image==''){
-    return require('../assets/icons/photoNotReady.png');
+  const photoImage = (recipeImage) => {
+  if(recipeImage==''){
+    return require('./assets/photoNotReady.png');
   }
   else{
-    return {uri: recipe.image};
+    return {uri: recipeImage};
   }
 };
 
@@ -263,13 +263,9 @@ const getImageForBookmark = () => {
               style={styles.post}
               onPress={() => navigation.navigate('RecipeMain', { recipeId: recipe.id })}>
          <View style={{width: 132, height: 70, left: 12, top: 9, borderRadius: 7, backgroundColor: '#ccc', alignItems: 'center', justifyContent: 'center'}}>
-         <Image
-          source={{ uri: recipe.image }}
-          defaultSource={require('../assets/icons/photoNotReady.png')}
-          style={{ width: 120, height: 60 }}
-         />
-        
-        </View>
+           <Image source={photoImage(recipe.image)} style={{width: 120, height: 60, }} 
+           />
+         </View>
               <Text style={styles.foodText}>{recipe.name}</Text>
               <View style={{ left: 12, top: 15 }}>
               </View>
