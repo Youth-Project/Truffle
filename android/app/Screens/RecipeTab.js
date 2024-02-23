@@ -222,7 +222,7 @@ const handleBookmarkClick = () => {
 };
 
 const getImageForBookmark = () => {
-    return book.bookmarkFill 
+    return isBookmarked(recipe.id) 
         ? require('../assets/icons/bookmark.png')
         : require('../assets/icons/bookmarkFill.png');
 };
@@ -282,8 +282,8 @@ const getImageForBookmark = () => {
         </View>
         <TouchableOpacity
               onPress={() => handleToggleBookmark(recipe.id)}
-              style={[styles.bookmarkButton, { backgroundColor: isBookmarked(recipe.id) ? 'grey' : 'white' }]}>
-              <Image {...isBookmarked(recipe.id) ? BookmarkFill : Bookmark}/>
+              style={[styles.bookmarkButton, { backgroundColor: isBookmarked(recipe.id) ? 'white' : 'white' }]}>
+              <Image source={isBookmarked(recipe.id) ? require('./assets/bookmark.png') : require('./assets/bookmarkFill.png')}/>
         </TouchableOpacity>
             </TouchableOpacity>
           ))}
@@ -315,34 +315,6 @@ const getImageForBookmark = () => {
           {/* Add more sorting buttons as needed */}
       </View>
     </View>
-
-
-
-      {/* Filtering and Sorting Controls */}
-      <View style={styles.controls}>
-        <View style={styles.filterSwitchContainer}>
-          <Text>Show User Recipes</Text>
-          <Switch
-            trackColor={{ false: "#767577", true: "#81b0ff" }}
-            thumbColor={showUserRecipes ? "#f5dd4b" : "#f4f3f4"}
-            ios_backgroundColor="#3e3e3e"
-            onValueChange={handleToggleSwitch}
-            value={showUserRecipes}
-          />
-        </View>
-        <TouchableOpacity style={styles.addButton} onPress={() => navigation.goBack()}>
-          <Text style={styles.addButtonText}>Add Recipe</Text> 
-        </TouchableOpacity>
-        <View style={styles.sortButtons}>
-          <TouchableOpacity style={styles.sortButton} onPress={() => handleSortOrder('korean')}>
-            <Text>Sort by Korean</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.sortButton} onPress={() => handleSortOrder('lack')}>
-            <Text>Sort by Lack</Text>
-          </TouchableOpacity>
-          {/* Add more sorting buttons as needed */}
-        </View>
-      </View>
 
     </View>
   )
@@ -494,10 +466,8 @@ const styles = StyleSheet.create({
   bookmarkButton: {
     bottom: 30,
     left: 120,
-    borderWidth: 1,
-    borderRadius: 25,
-    width: 18,
-    height: 18,
+    width: 16,
+    height: 20,
     borderColor: 'grey',
   },
 });
