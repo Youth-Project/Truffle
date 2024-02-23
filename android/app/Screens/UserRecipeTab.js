@@ -56,14 +56,14 @@ const refrigeratorOrderByLack = async (refrigeratorIngredients) => {
 const fetchedRecipes = [];
 const fetchRecipeData = async () => {
   try {
-    const snapshot = await firestore().collection('recipes').get();
+    const snapshot = await firestore().collection('users').get();
     snapshot.forEach((doc) => {
       const recipeData = doc.data();
       fetchedRecipes.push({
         id: doc.id,
-        name: recipeData.recipe_name,
-        image: recipeData.recipe_image,
-        time: recipeData.recipe_time,
+        name: recipeData.user_recipe_name,
+        image: recipeData.user_recipe_image,
+        time: recipeData.user_recipe_time,
       });
     });
     setRecipeData(fetchedRecipes);
@@ -282,7 +282,7 @@ const getImageForBookmark = () => {
             <TouchableOpacity
               key={recipe.id}
               style={styles.post}
-              onPress={() => navigation.navigate('RecipeMain', { recipeId: recipe.id })}>
+              onPress={() => navigation.navigate('UserRecipeMain', { recipeId: recipe.id })}>
          <View style={{width: 132, height: 70, left: 12, top: 9, borderRadius: 7, backgroundColor: '#ccc', alignItems: 'center', justifyContent: 'center'}}>
            <Image source={photoImage(recipe.image)} style={{width: 120, height: 60, }} 
            />
