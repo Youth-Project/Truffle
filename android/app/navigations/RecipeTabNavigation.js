@@ -29,17 +29,17 @@ function RecipeTabNavigator() {
       <Tab.Screen
         name="RefTab"
         component={RefTab}
-        options={{ tabBarLabel: '냉장고' }} 
+        options={{ tabBarLabel: '냉장고', unmountOnBlur: true }} 
       />
       <Tab.Screen
         name="RecipeTabStack"
         component={RecipeDetailStackNavigation}
-        options={{ tabBarLabel: '레시피' }} 
+        options={{ tabBarLabel: '레시피', unmountOnBlur: true }} 
       />
       <Tab.Screen
         name="BookmarkTab"
         component={BookmarkTab}
-        options={{ tabBarLabel: '북마크' }} 
+        options={{ tabBarLabel: '북마크', unmountOnBlur: true }} 
       />
     </Tab.Navigator>
   );
