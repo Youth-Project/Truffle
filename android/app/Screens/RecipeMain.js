@@ -168,7 +168,7 @@ const getImageForButton = ({recipeDifficulty}) => {
     } 
   };
 
-const photoImage = () => {
+const photoImage = (recipeImage) => {
   if(recipeImage==''){
     return require('../assets/icons/photoNotReady.png');
   }
