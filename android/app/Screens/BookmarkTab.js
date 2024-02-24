@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { TouchableOpacity, Image, Text, ScrollView, View, FlatList, StyleSheet } from 'react-native';
 import firestore from "@react-native-firebase/firestore";
 
+function refreshPage(){
+    window.location.reload();
+} 
+
 const BookMarkItem = ({ item, navigation }) => {
     const [book, setBook] = useState({
         bookmarkFill: false,
@@ -13,6 +17,7 @@ const BookMarkItem = ({ item, navigation }) => {
             ...prevBook,
             bookmarkFill: !prevBook.bookmarkFill,
         }));
+        refreshPage();
     };
 
     const getImageForBookmark = () => {
