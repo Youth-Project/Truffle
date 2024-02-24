@@ -9,7 +9,7 @@ import ForgotPW from "../Screens/ForgotPW";
 import SuccessPW from "../Screens/SuccessPW";
 import SuccessLogin from "../Screens/SuccessLogin";
 import Budgetpg from "../Screens/Budgetpg";
-
+import MainStackNavigation from "./MainStackNavigation";
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 const Stack = createNativeStackNavigator();
