@@ -341,7 +341,7 @@ const getImageForBookmark = () => {
 const styles = StyleSheet.create({
     container: {
     backgroundColor: '#F8F9FA', // 배경색상 추가
-    height: 'auto',
+    height: '100%',
   },
   containerScroll: {
     top: 20,
