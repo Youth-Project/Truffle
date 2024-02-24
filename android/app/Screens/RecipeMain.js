@@ -185,7 +185,7 @@ const photoImage = (recipeImage) => {
         style={{top: 35,
     marginBottom: 20, 
     paddingTop: 4, borderRadius: 7, position: 'absolute', backgroundColor: '#EDEDED', width: 350, height: 139, justifyContent: 'center', alignItems: 'center'}} >
-    <Image source={photoImage()}/>
+    <Image source={photoImage(recipeImage)}/>
     </View>
 
 
