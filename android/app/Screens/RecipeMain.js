@@ -104,7 +104,25 @@ const RecipeMain = ({ navigation, route }) => {
 
       const renderIngredients = () => {
         return Object.entries(recipeIngredients).map(([ingredient, amount], index) => (
-          <Text key={index}>{ingredient}: {amount}</Text>
+          <View style={{flexDirection: 'row',  }} key={index}>
+              <View style={{ 
+              marginHorizontal: 2,
+              right: 40,
+              alignItems: 'center',
+              top: 2,
+              }}>
+                <Text style={{color: '#000', marginHorizontal: 2,
+                    fontSize: 14, }}>
+                    {ingredient}
+                </Text>     
+            </View>
+           <View style={{ left: 47, alignItems: 'center',
+              }}>
+              <Text style={{ color: '#000', marginHorizontal: 2,
+                  fontSize: 14, bottom: 17 }}>
+                  {amount} </Text>
+            </View>
+        </View>
         ));
       };
 
@@ -310,7 +328,7 @@ const styles = StyleSheet.create({
 
   row: {
     position: 'absolute',
-    top: 530,
+    top: 515,
     flexDirection: 'row', 
     justifyContent: 'space-evenly',
     gap: 25,
