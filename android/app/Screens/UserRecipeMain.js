@@ -184,8 +184,9 @@ const photoImage = (recipeImage) => {
       <View
         style={{top: 35,
     marginBottom: 20, 
-    paddingTop: 4, borderRadius: 7, position: 'absolute', backgroundColor: '#EDEDED', width: 350, height: 139, justifyContent: 'center', alignItems: 'center'}} >
-    <Image source={photoImage(recipeImage)}/>
+    paddingTop: 4, borderRadius: 7, position: 'absolute', backgroundColor: '#FFFFFF', width: 350, height: 139, justifyContent: 'center', alignItems: 'center'}} >
+    <Image style={{width: 100, height: 100}} source={require('./assets/truffle.png')}/>
+    <Image style={{width: 25, height: 25, position: 'absolute', left: 310, bottom: 20 }} source={require('./assets/profile.png')}/>
     </View>
 
 
