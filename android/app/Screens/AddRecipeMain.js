@@ -713,6 +713,9 @@ buttonContainer: {
       fontWeight: '700',
       fontSize: 15
   },
+  button: {
+    
+  },
   buttonPressed: {
     backgroundColor: '#EDEDED',
     borderRadius: 10,
