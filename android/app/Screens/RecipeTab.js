@@ -102,7 +102,7 @@ const handleSortOrder = async (orderType) => {
 
   const photoImage = (recipeImage) => {
   if(recipeImage==''){
-    return require('../assets/photoNotReady.png');
+    return require('../assets/icons/photoNotReady.png');
   }
   else{
     return {uri: recipeImage};
@@ -334,8 +334,8 @@ const getImageForBookmark = () => {
     </View>
 
     </View>
-  )
-};
+  </View>
+)};
 
 
 const styles = StyleSheet.create({
