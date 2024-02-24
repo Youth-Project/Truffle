@@ -15,7 +15,7 @@ const Ingred = props => {
 
   return (
 
- <View style={{flextDirection: 'row',  }}>
+ <View>
 
   <View style={{ 
     marginHorizontal: 2,
