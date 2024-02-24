@@ -30,7 +30,7 @@ const [isPressed, setIsPressed] = useState(false);
       <TouchableOpacity
         style={styles.back}
         onPress={() => navigation.goBack()}>
-        <Text style={styles.backBTN}> ⟨ </Text>
+        <Text style={styles.backBTN}> 〈 </Text>
       </TouchableOpacity>
 
       <Text style={styles.topTitle}>회원가입</Text>
