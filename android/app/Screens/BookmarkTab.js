@@ -2,10 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { TouchableOpacity, Image, Text, ScrollView, View, FlatList, StyleSheet } from 'react-native';
 import firestore from "@react-native-firebase/firestore";
 
-function refreshPage(){
-    window.location.reload();
-} 
-
 const BookMarkItem = ({ item, navigation }) => {
     const [book, setBook] = useState({
         bookmarkFill: false,
@@ -17,7 +13,7 @@ const BookMarkItem = ({ item, navigation }) => {
             ...prevBook,
             bookmarkFill: !prevBook.bookmarkFill,
         }));
-        refreshPage();
+        alert('북마크버튼을 누른 후 화면을 당겨 새로고침을 해보세요 !');
     };
 
     const getImageForBookmark = () => {
@@ -108,13 +104,30 @@ const BookMark = ({ navigation }) => {
         }
     };
 
+    const [refreshing, setRefreshing] = useState(false);
+    
+    const getRefreshData = async () => {
+     	setRefreshing(true);
+        await RefreshDataFetch();
+        setRefreshing(false);
+    }
+    
+    const onRefresh = () => {
+    	if(!refreshing) {
+        	getRefreshData();
+        }
+    };
+
     return (
         <View style={styles.container}>
             <FlatList
                 data={bookmarkedRecipes}
+                extraData={bookmarkedRecipes}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => <BookMarkItem item={item}  navigation={navigation} />}
                 numColumns={2}
+                onRefresh={onRefresh}
+                refreshing={refreshing}
             />
         </View>
     );
@@ -123,7 +136,7 @@ const BookMark = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: '#F8F9FA',
-        height: 'auto',
+        height: '100%',
         alignItems: 'center',
 
     },
