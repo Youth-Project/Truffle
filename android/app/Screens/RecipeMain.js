@@ -104,7 +104,7 @@ const RecipeMain = ({ navigation, route }) => {
 
       const renderIngredients = () => {
         return Object.entries(recipeIngredients).map(([ingredient, amount], index) => (
-          <View style={{flexDirection: 'row',  }} key={index}>
+          <View key={index}>
               <View style={{ 
               marginHorizontal: 2,
               right: 40,
