@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import { NavigationContainer, Text, Button, View, TouchableOpacity,TextInput, ScrollView, StyleSheet, Image, Dimensions, SafeAreaView} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 {/* 레시피입력 박스 컴포넌트*/}
 const DetailList = ({ countList }) => {
@@ -39,6 +40,30 @@ function AddProgress({navigation}) {
     countArr.push(counter)
     setCountList(countArr)
   }
+
+  useEffect(() => {
+    // 전달된 데이터를 가져와서 상태에 설정
+    const { params } = route;
+
+  const loadUserData = async () => {
+    // AsyncStorage에서 데이터 불러오기
+    try {
+      await AsyncStorage.getItem('ingredients');
+      await AsyncStorage.getItem('time');
+      await AsyncStorage.getItem('difficulty');
+    } catch (error) {
+      console.error('사용자 정보를 불러오지 못했습니다:', error);
+    }
+  };
+
+loadUserData();
+  }, [route]);
+
+
+  const handlePress = () => {
+    alert('레시피 등록이 완료되었습니다 !');
+    navigation.navigate('RecipeTab');
+  };
 
   return (
   <SafeAreaView>
@@ -89,7 +114,7 @@ function AddProgress({navigation}) {
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => navigation.navigate('RecipeTab')}>
+                onPress={handlePress}>
                 <Text style={styles.buttonText}>레시피 등록</Text>
               </TouchableOpacity>
           </View>
