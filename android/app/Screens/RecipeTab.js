@@ -112,31 +112,12 @@ const photoImage = () => {
  const [modalVisible, setModalVisible] = useState(false);
 
 {/* 내 레시피만 보기 */}
-const [my, setMy] = useState({
-    check: false,
-    checkFill: false,
-  });
+
 
   const handleCheckboxClick = (buttonName) => {
-    setMy((prevStates) => ({
-      ...prevStates,
-      [buttonName]: !prevStates[buttonName],
-    }));
-  }; 
 
-  const getImageForCheckbox = (buttonName) => {
-    if (my[buttonName]) {
-      switch (buttonName) {
-        case 'checkFill':
-          return require('../assets/icons/checkFill.png');
-        default:
-          return require('../assets/icons/check.png');
-      }
-    } 
-    else{
-      return require('../assets/icons/check.png');
-    }
-  };
+    navigation.navigate('UserRecipeTab');
+  }; 
 
    {/* 조리가능순 버튼 (난이도 재활용)*/}
    const [star, setStar] = useState({
@@ -151,19 +132,6 @@ const [my, setMy] = useState({
     }));
   }; 
 
-  const getImageForButton = (buttonName) => {
-    if (star[buttonName]) {
-      switch (buttonName) {
-        case 'button2':
-          return require('../assets/icons/quick.png');
-        default:
-          return require('../assets/icons/koreanOrder.png');
-      }
-    } 
-    else{
-      return require('../assets/icons/koreanOrder.png');
-    }
-  };
 
 
   {/* bookmark */}
@@ -233,22 +201,17 @@ const [my, setMy] = useState({
       {/* 내 레시피만 보기 */}
 <View style={{flexDirection: 'row', marginTop: 10, gap: 4, marginLeft: 10}}>
   {/* 레시피 도움말 i버튼 */}
-  <TouchableOpacity
-        style={styles.infoBtn}
-        onPress={() => setModalVisible(true)}>
-        <Text style={styles.infoTxt}>i</Text>
-      </TouchableOpacity>
-        <Text style={{ fontSize: 10}}>
+        <Text style={{ fontSize: 10, marginLeft: 10}}>
           내가 만든 레시피만 보기
         </Text>
-    <TouchableOpacity onPress={() => handleCheckboxClick('checkFill')}>
-        <Image source={getImageForCheckbox('checkFill')}/>
+    <TouchableOpacity onPress={() => navigation.navigate('UserRecipeTab')}>
+        <Image source={require('../assets/icons/check.png')}/>
     </TouchableOpacity>
 
       {/* 조리가능 순 */}
-<TouchableOpacity onPress={() => handleSmallButtonClick('button2')} style={{ border: 'none', backgroundColor: 'transparent', left: 120, }}>
+{/* <TouchableOpacity onPress={() => handleSmallButtonClick('button2')} style={{ border: 'none', backgroundColor: 'transparent', left: 120, }}>
           <Image source={getImageForButton('button2')}/>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
     
   </View>
   {/* 동그라미 추가 버튼 */}
@@ -379,6 +342,7 @@ const styles = StyleSheet.create({
     top: 10,
     backgroundColor: '#F8F9FA', // 배경색상 추가
     height: 'auto',
+    marginBottom: 50
   },
   cont: {
     flexDirections: 'row',
