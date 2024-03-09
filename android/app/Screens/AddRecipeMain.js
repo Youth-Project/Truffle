@@ -1,7 +1,7 @@
 {/* 부족한 부분: 항목이 채워진 조건하에 버튼이 채워지게, 조리시간 & 별컴 db연결, 요리이름 인풋창 한쪽으로만 늘어나게하기, 사진추가 누르면 갤러리연동 */}
 {/* 전체 맵 안에 포로 url 재료 map 조리시간 array, 난이도 , 과정 array */}
 import React, { useState } from 'react';
-import { Text, View, TouchableOpacity, TextInput, StyleSheet, Modal, Image, ScrollView } from 'react-native';
+import { Text, View, TouchableOpacity, TextInput, StyleSheet, Modal, Image, ScrollView, FlatList  } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -11,7 +11,10 @@ const AddRecipeMain = ({navigation}) => {
   const [min, setMin] = useState('');
   const [cookingTime, setCookingTime] = useState('');
 
+
   const [modalVisible, setModalVisible] = useState(false);
+
+
 
 
 {/* 별컴포넌트 */}
@@ -21,14 +24,17 @@ const AddRecipeMain = ({navigation}) => {
     button3: false,
   });
 
+
   const handleSmallButtonClick = (buttonName) => {
     setStar((prevStates) => ({
       ...prevStates,
       [buttonName]: !prevStates[buttonName],
     }));
-  }; 
+  };
+
 
   let recipe_difficulty = 1;
+
 
   const getImageForButton = (buttonName) => {
     if (star[buttonName]) {
@@ -44,13 +50,15 @@ const AddRecipeMain = ({navigation}) => {
           recipe_difficulty = 1
           return require('../assets/icons/star1.png');
       }
-    } 
+    }
   };
+
 
 {/* 조리시간 업뎃 */}
   const updateCookingTime = () => {
   const hasHour = hour && hour !== '0';
   const hasMinute = min && min !== '0';
+
 
   if (hasHour || hasMinute) {
     const newCookingTime = `${hasHour ? hour + '시간' : ''} ${hasMinute ? min + '분' : ''}`;
@@ -59,8 +67,10 @@ const AddRecipeMain = ({navigation}) => {
     setCookingTime('조리시간');
   }
 
+
   setModalVisible(false);
 };
+
 
 
 
@@ -68,22 +78,25 @@ const AddRecipeMain = ({navigation}) => {
   const [data, setData] = useState([]);
   const [modal2Visible, setModal2Visible] = useState(false);
 
+
   const [ingred, setIngred] = useState('');
   const [amount, setAmount] = useState('');
 
+
 const saveData = async () => {
     // AsyncStorage에 데이터 저장
+    navigation.navigate('AddProgress');
   if(data.length!==0 && cookingTime.length!==0){
     try {
-      await AsyncStorage.setItem('ingredients', data);
-      await AsyncStorage.setItem('time', cookingTime);
+      await AsyncStorage.setItem('ingredients', JSON.stringify(data));
+      await AsyncStorage.setItem('time', JSON.stringify(cookingTime));
       await AsyncStorage.setItem('difficulty', String(recipe_difficulty));
-      navigation.navigate('AddProgress');
     } catch (error) {
       console.error('사용자 정보를 저장할 수 없습니다: ', error);
     }
   }
   };
+
 
     const openModal = () => {
     setModal2Visible(true)
@@ -91,6 +104,8 @@ const saveData = async () => {
     setIngred('');
     setAmount('');
   };
+
+
 
 
     const handleAddItem = () => {
@@ -103,6 +118,7 @@ const saveData = async () => {
     setModal2Visible(false);
   };
 
+
   const [conversion, setConversion] = useState('');
   const [isPressed, setIsPressed] = useState(false);
   const [foodUnits, setFoodUnits] = useState('개');
@@ -110,6 +126,7 @@ const saveData = async () => {
         setFoodUnits(unit);
         setIsPressed(!isPressed);
     };
+
 
 const changeConversion = (foodUnits) =>{
     switch (foodUnits) {
@@ -146,6 +163,7 @@ const changeConversion = (foodUnits) =>{
         <View style={styles.modalView}>
           <Text style={{fontSize: 15,bottom: 20,right: 85,}}>요리 소요 시간</Text>
 
+
       <View style={{flexDirection: 'row', marginTop: 8 }}>
       <TextInput
             style={{fontSize: 15,
@@ -160,13 +178,15 @@ const changeConversion = (foodUnits) =>{
             borderRightWidth:0,
             paddingTop: 6,
             marginLeft: 5}}
-            placeholder="0" 
+            placeholder="0"
             keyboardType="numeric"
+
 
 value={hour}
             onChangeText={(text) => setHour(text)}
             />
           <Text style={{ right: 16,fontSize: 15,top: 12,}}>시간</Text>
+
 
           <TextInput
             style={{fontSize: 15,
@@ -181,73 +201,24 @@ value={hour}
             borderRightWidth:0,
             paddingTop: 6,
             marginLeft: 5}}
-            placeholder="0" 
-            keyboardType="numeric" 
-            
+            placeholder="0"
+            keyboardType="numeric"
+           
 value={min}
+
 
 onChangeText={(text) => setMin(text)}
             />
           <Text style={{ left: 20,fontSize: 15,top: 12,}} >분</Text>
           </View>
-            
+           
       <TouchableOpacity
         style={styles.modButton}
         onPress={updateCookingTime}
 >
         <Text style={styles.modButtonText}>완료</Text>
       </TouchableOpacity>
-              
-      </View>
-     </View>
-    </Modal>
-
-{/* 냉장고 예시 모달 */}
-<Modal visible={modal2Visible} style={styles.buttonContainer}>
-        <ColorButton
-          color="red"
-          onPress={() => handleColorSelection('red')}
-          selected={selectedColors.includes('red')}
-        />
-        <ColorButton
-          color="green"
-          onPress={() => handleColorSelection('green')}
-          selected={selectedColors.includes('green')}
-        />
-        <ColorButton
-          color="blue"
-          onPress={() => handleColorSelection('blue')}
-          selected={selectedColors.includes('blue')}
-        />
-        {/* Add more ColorButtons as needed */}
-      
-      <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-        <Text style={styles.saveButtonText}>Save</Text>
-      </TouchableOpacity>
- </Modal>
-
-{/* 사진추가 모달 */}
-<Modal
-      animationType="slide"
-      transparent={true}
-      visible={modal3Visible}
-      onRequestClose={() => {
-        Alert.alert('Modal has been closed.');
-        setModal3Visible(!modal3Visible);
-      }}>
-      <View style={styles.centeredViewPhoto}>
-        <View style={styles.modalViewPhoto}>
-          <Text style={{fontSize: 15, paddingVertical: 10}}>카메라로 촬영하기</Text>
-          <Text style={{fontSize: 15, paddingVertical: 10}}>사진 선택하기</Text>
-      
-            
-      <TouchableOpacity
-        style={styles.modButton}
-        onPress={handlePhoto}
->
-        <Text style={styles.modButtonText}>완료</Text>
-      </TouchableOpacity>
-              
+             
       </View>
      </View>
     </Modal>
@@ -266,10 +237,13 @@ onChangeText={(text) => setMin(text)}
         <View style={styles.modalView2}>
           <Text style={{fontSize: 15,bottom: 20,right: 85,}}>재료 입력하기</Text>
 
+
       <View style={{flexDirection: 'row', marginTop: 8, marginLeft: 16 }}>
+
 
       <Text style={{ right: 16,fontSize: 15,top: 42,}}>재료명: </Text>
       <TextInput
+
 
             style={{fontSize: 15,
             borderWidth: 0.5,
@@ -284,8 +258,9 @@ onChangeText={(text) => setMin(text)}
             paddingTop: 6,
             marginLeft: 15,
             top: 30}}
-            placeholder="감자" 
-            value={ingred} 
+            placeholder="감자"
+            value={ingred}
+
 
             onChangeText={(text) => setIngred(text)}
             />
@@ -302,10 +277,11 @@ onChangeText={(text) => setMin(text)}
             borderRightWidth:0,
             paddingTop: 6,
             top: 30}}
-            placeholder="5" 
+            placeholder="5"
             keyboardType='numeric'
-            
+           
 value={amount}
+
 
 onChangeText={(text) => setAmount(text)}
             />
@@ -330,44 +306,47 @@ onChangeText={(text) => setAmount(text)}
                         </TouchableOpacity>
                     </View>
                     <View style={styles.buttonContainer}>
-              
+             
                     <TouchableOpacity style= {styles.nextButton} onPress={handleAddItem} >
                             <Text style={styles.next}>추가하기</Text>
-                    </TouchableOpacity> 
+                    </TouchableOpacity>
                     </View>
                 </View>
-            
+           
       </View>
      </View>
     </Modal>
 
+
 {/* 사진추가 */}
     <TouchableOpacity
         style={{top: 35,
-    marginBottom: 20, 
+    marginBottom: 20,
     paddingTop: 4, borderRadius: 7, position: 'absolute', backgroundColor: '#FFFFFF', width: 350, height: 139, justifyContent: 'center', alignItems: 'center'}} >
     <Image style={{width: 100, height: 100}} source={require('../assets/icons/truffle.png')}/>
     <Image style={{width: 25, height: 25, position: 'absolute', left: 310, bottom: 20 }} source={require('../assets/icons/profile.png')}/>
     </TouchableOpacity>
 
+
 {/*<ScrollView style={{top: 100, height: 'auto'}}> */}
+
 
 {/*텍스트박스 어떻게 한쪽으로만 늘어나게하지 */}
       <TextInput
         style={{
-          top: 190, right: 130, 
-          fontSize: 20, 
+          top: 190, right: 130,
+          fontSize: 20,
         backgroundColor: '#FFFFFF',
-        
+       
         borderRadius: 10,
-        paddingLeft: 6, paddingRight: 6, paddingTop: 7, paddingBottom: 7, 
-        marginBottom: 17, textDecorationLine: 'underline', textDecorationColor: '#FEA655', 
+        paddingLeft: 6, paddingRight: 6, paddingTop: 7, paddingBottom: 7,
+        marginBottom: 17, textDecorationLine: 'underline', textDecorationColor: '#FEA655',
           }}
         onChangeText={onChangeFood}
         value={food}
         placeholder="요리이름"
       />
-    
+   
 {/* 필요한 재료 */}
 <TouchableOpacity
         style={{ right: 62, top: 190,
@@ -375,28 +354,35 @@ onChangeText={(text) => setAmount(text)}
     paddingVertical: 5,
     width: 215,
     height: 330,
-    borderRadius: 10, }}
-        onPress={() => setModal2Visible(true)}
+    borderRadius: 10, alignItems: 'center', }}
+        onPress={openModal}
         >
-        <Image style={{right: 180, top: 10, zIndex: 2, position: 'absolute' }} source={require('./assets/bowl.png')}/>
-        <Text style={{
-          top: 150,
-          color: '#9C9C9C', 
-        fontSize: 12, 
-        textAlign: 'center',
-        }}>필요한 재료</Text>
-        {displayColors && selectedColors.length > 0 && (
-          <View>
-        
+        <Image style={{right: 180, top: 7, zIndex: 2, position: 'absolute' }} source={require('../assets/icons/bowl.png')}/>
+        <View style={{textAlign: 'center', width: 215, alignItems: 'center',
+          height: 'auto',
+          top: 22,
+          marginBottom: 20 }}>
+    {data.length === 0 ? (
+          <Text style={{ color: '#ccc', fontSize: 14, marginVertical: 50 }}>필요한 재료</Text>
+        ) : (
+        <FlatList
+            data={data}
+            renderItem={({ item }) =>
+            <Text style={{color: '#000',
+        fontSize: 14, marginVertical: 2, }}>{item}</Text>
+  }
+            //keyExtractor={(item, index) => index.toString()}
+          />
+        )}
+          </View>
+       
 
-         {selectedColors.map((color, index) => (
-           <ScrollView style={{justifyContent: 'center'}}>
-            <Text key={index} style={{ color }}>{color || '필요한 재료'}</Text>
-            </ScrollView>
-            ))}
-           </View>
-           )}
+
       </TouchableOpacity>
+
+
+
+
 
 
   {/* 조리시간 */}
@@ -409,14 +395,15 @@ onChangeText={(text) => setAmount(text)}
     borderRadius: 10,
     marginBottom: 15, }}
         onPress={() => setModalVisible(true)}>
-        <Image style={{left: 45, top: 15, position: 'absolute', alignItems: 'center',  }} source={require('./assets/clock.png')}/>
+        <Image style={{left: 45, top: 15, position: 'absolute', alignItems: 'center',  }} source={require('../assets/icons/clock.png')}/>
         <Text style={{
           top: 78,
-          color: '#9C9C9C', 
-        fontSize: 18, 
+          color: '#9C9C9C',
+        fontSize: 18,
         textAlign: 'center',
         }}> {cookingTime || '조리시간'} </Text>
 </TouchableOpacity>
+
 
       <View
         style={{ left: 115, bottom: 140,
@@ -427,26 +414,29 @@ onChangeText={(text) => setAmount(text)}
     borderRadius: 10, }} >
         <Text style={{
           top: 5,
-          color: '#000000', 
-        fontSize: 18, 
+          color: '#000000',
+        fontSize: 18,
         textAlign: 'center',
         }}>
-        
+       
         난이도</Text>
     <View style={{flexDirection: 'row', gap: 0}}>
 
-    
+
+   
     {/* 별컴포넌트 1 */}
         <TouchableOpacity style={{width: 24, height: 24, backgroundColor: 'transparent', marginLeft: 10, marginTop: 50, }}
         onPress={() => handleSmallButtonClick('button1')}        >
-        <Image source={require('./assets/star1.png')}/>
+        <Image source={require('../assets/icons/star1.png')}/>
         </TouchableOpacity>
-        
+       
+
 
         <TouchableOpacity style={{width: 24, height: 24, backgroundColor: 'transparent', marginLeft: 10, marginTop: 50}}
         onPress={() => handleSmallButtonClick('button2')}>
         <Image style={{right: 34}} source={getImageForButton('button2')} />
         </TouchableOpacity>
+
 
         <TouchableOpacity style={{width: 24, height: 24, backgroundColor: 'transparent', marginLeft: 10, marginTop: 50}}
         onPress={() => handleSmallButtonClick('button3')} >
@@ -455,10 +445,11 @@ onChangeText={(text) => setAmount(text)}
       </View>
       </View>
 
+
 <View style={styles.row}>
       <TouchableOpacity
         style={{ top: 85,
-        
+       
     borderWidth: 1,
     borderColor: '#CCCCCC',
     paddingVertical: 10,
@@ -468,11 +459,11 @@ onChangeText={(text) => setAmount(text)}
         onPress={() => navigation.goBack()}>
  
         <Text style={{
-        color: '#CCCCCC', 
-        fontSize: 15, 
+        color: '#CCCCCC',
+        fontSize: 15,
         fontWeight: 'bold',
         textAlign: 'center',
-        fontFamily: 'NanumGothic' 
+        fontFamily: 'NanumGothic'
         }}>
         뒤로가기</Text>
       </TouchableOpacity>
@@ -485,6 +476,8 @@ onChangeText={(text) => setAmount(text)}
 </View>
   );
 }
+
+
 
 
 const styles = StyleSheet.create({
@@ -535,6 +528,7 @@ const styles = StyleSheet.create({
   },
   centeredViewPhoto: {
 
+
     justifyContent: 'flex-end',
     alignItems: 'flex-end',
     top: 82,
@@ -556,13 +550,15 @@ const styles = StyleSheet.create({
     elevation: 500,
   },
 
+
   row: {
     position: 'absolute',
     top: 530,
-    flexDirection: 'row', 
+    flexDirection: 'row',
     justifyContent: 'space-evenly',
     gap: 25,
   },
+
 
   buttonUnfill: {
     top: 85,
@@ -572,6 +568,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 25,
     marginBottom: 20,
+
 
   },
   buttonColorText: {
@@ -597,7 +594,8 @@ const styles = StyleSheet.create({
     fontFamily: 'NanumGothic',
   },
 
-//modal eg 
+
+//modal eg
 buttonContainer: {
     flexDirection: 'row',
     marginBottom: 20,
@@ -674,7 +672,7 @@ buttonContainer: {
       justifyContent: 'center',
       textAlign: 'center',
       top: 6
-  },   
+  },  
   buttonContainer:{
       display:'flex',
       flexDirection:'row',
@@ -714,13 +712,13 @@ buttonContainer: {
       fontSize: 15
   },
   button: {
-    
+   
   },
   buttonPressed: {
     backgroundColor: '#EDEDED',
     borderRadius: 10,
   },
-
 });
+
 
 export default AddRecipeMain;
