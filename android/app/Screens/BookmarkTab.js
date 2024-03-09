@@ -36,7 +36,7 @@ const BookMarkItem = ({ item, navigation }) => {
         <View style={{ alignItems: 'center', margin: 10}}>
             <TouchableOpacity
             style={styles.post}
-            onPress={() => navigation.navigate('RecipeDetail', { recipeId: item.id })}>
+            onPress={() => navigation.navigate('RecipeMain', { recipeId: item.id })}>
             <View style={{width: 132, height: 70, left: 12, top: 9, borderRadius: 7, backgroundColor: '#ccc', alignItems: 'center', justifyContent: 'center'}}>
                 <Image source={photoImage(item.image)} style={{width: 120, height: 60, }}/>
             </View>
