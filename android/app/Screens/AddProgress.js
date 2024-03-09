@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { NavigationContainer, Text, Button, View, TouchableOpacity,TextInput, ScrollView, StyleSheet, Image, Dimensions, SafeAreaView} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -10,12 +10,10 @@ const DetailList = ({ countList }) => {
     <View style={{gap: 10}}>
       {countList && countList.map((item, i) => (
         <View key={i}>
-
           <View style={styles.recipeboxContainer}>
             <Text style={{fontWeight: 'bold', fontSize: 16, left: 0, }}>
             {++s}.
             </Text>
-            
             <TextInput numberOfLines={2}
               style={{fontSize: 12, flexShrink : 1 }}
               placeholder="레시피 입력 (최대 85자)"
@@ -43,8 +41,6 @@ function AddProgress({navigation}) {
 
   useEffect(() => {
     // 전달된 데이터를 가져와서 상태에 설정
-    const { params } = route;
-
   const loadUserData = async () => {
     // AsyncStorage에서 데이터 불러오기
     try {
@@ -57,7 +53,7 @@ function AddProgress({navigation}) {
   };
 
 loadUserData();
-  }, [route]);
+  }, []);
 
 
   const handlePress = () => {
@@ -68,13 +64,13 @@ loadUserData();
   return (
   <SafeAreaView>
     <ScrollView>
-      <View style={styles.container}>
+-     <View style={styles.container}>
         <Text style={styles.cookText}>조리과정 작성</Text>
           <ScrollView style={styles.cookScrollContainer}>
           {/*<ScrollView style={{top: 100, height: 'auto'}}> */}
           <View style={{ margin: 4, alignItems: 'center'}}>
             <DetailList countList={countList} />
- 
+
             <TouchableOpacity
               style={{ alignItems: 'center',
               backgroundColor: '#FFFFFF',
@@ -89,7 +85,7 @@ loadUserData();
             </TouchableOpacity>
           </View>
           </ScrollView> 
-       </View>
+      </View>
     </ScrollView>
     <View style={{backgroundColor: '#F8F9FA', width: 500, height: 100, position: 'absolute', top: 640}}></View>
     <View style={styles.row}>
@@ -199,7 +195,7 @@ const styles = StyleSheet.create({
   },
   addText:{
     color: '#CCCCCC', 
-    ontSize: 15, 
+    fontSize: 15, 
     fontWeight: 'bold',
     textAlign: 'center',
   }
