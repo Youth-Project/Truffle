@@ -48,6 +48,8 @@ const RecipeMain = ({ navigation, route }) => {
     const [recipeImage, setRecipeImage] = useState(null);
     const [isBookmarked, setIsBookmarked] = useState(false);
     const [recipeDifficulty, setRecipeDifficulty] = useState();
+    const [recipeId2, setRecipeId2] = useState();
+
     useEffect(() => {
         const fetchRecipeInfo = async () => {
           try {
@@ -56,6 +58,7 @@ const RecipeMain = ({ navigation, route }) => {
     
             if (recipeDoc.exists) {
               const recipeData = recipeDoc.data();
+              setRecipeId2(recipeData.id);
               setRecipeName(recipeData.recipe_name);
               setRecipeTime(recipeData.recipe_time);
               setRecipeIngredients(recipeData.recipe_ingredients);
@@ -224,7 +227,6 @@ const photoImage = (recipeImage) => {
     }}>
     <Image style={{right: 180, top: 10, zIndex: 2, position: 'absolute' , }} source={require('../assets/icons/bowl.png')}/>
 
-
 <ScrollView style={{
     width: 215,
     height: 'auto', 
@@ -282,9 +284,6 @@ const photoImage = (recipeImage) => {
   </View>
       </View>
 
-
-
-
 <View style={styles.row}>
       <TouchableOpacity
         style={{ top: 85,
@@ -308,7 +307,7 @@ const photoImage = (recipeImage) => {
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('RecipeDetail')}>
+        onPress={() => navigation.navigate('RecipeDetail', { recipeId: route.params.recipeId })}>
         <Text style={styles.buttonText}>조리하기</Text>
       </TouchableOpacity>
   </View>
