@@ -5,7 +5,7 @@ import { CurrentRenderContext } from '@react-navigation/native';
 import BookmarkFill from '../assets/icons/bookmarkFill.png';
 import Bookmark from '../assets/icons/bookmark.png';
 
-const RecipeTab = ({navigation}) => {
+const UserRecipeTab = ({navigation}) => {
   const [showUserRecipes, setShowUserRecipes] = useState(false);
   const [recipeData, setRecipeData] = useState([]);
   const [refrigeratorIngredients, setRefrigeratorIngredients] = useState([]);
@@ -26,13 +26,13 @@ const handleToggleSwitch = () => {
 };
 
 const orderByKorean = async () => {
-  const koreanOrder = await firestore().collection('users').orderBy('xxvkRzKqFcWLVx4hWCM8GgQf1hE3').get();
+  const koreanOrder = await firestore().collection('recipe').orderBy('recipeName').get();
   return koreanOrder.docs.map((doc) => doc.data());
 };
 
 // 부족한 재료 갯수가 적은 순으로 정렬하는 함수
 const refrigeratorOrderByLack = async (refrigeratorIngredients) => {
-  const lackOrder = await firestore().collection('users').get();
+  const lackOrder = await firestore().collection('recipe').get();
 
   const sortedRecipe = lackOrder.docs
     .map((recipeDoc) => {
@@ -56,14 +56,14 @@ const refrigeratorOrderByLack = async (refrigeratorIngredients) => {
 const fetchedRecipes = [];
 const fetchRecipeData = async () => {
   try {
-    const snapshot = await firestore().collection('users').get();
+    const snapshot = await firestore().collection('recipes').get();
     snapshot.forEach((doc) => {
       const recipeData = doc.data();
       fetchedRecipes.push({
         id: doc.id,
-        name: recipeData.user_recipe_name,
-        image: recipeData.user_recipe_image,
-        time: recipeData.user_recipe_time,
+        name: recipeData.recipe_name,
+        image: recipeData.recipe_image,
+        time: recipeData.recipe_time,
       });
     });
     setRecipeData(fetchedRecipes);
@@ -100,12 +100,12 @@ const handleSortOrder = async (orderType) => {
   }
 };
 
-  const photoImage = (recipeImage) => {
-  if(recipeImage==''){
-    return require('../assets/photoNotReady.png');
+const photoImage = () => {
+  if(recipe.image==''){
+    return require('../assets/icons/photoNotReady.png');
   }
   else{
-    return {uri: recipeImage};
+    return {uri: recipe.image};
   }
 };
 
@@ -113,31 +113,14 @@ const handleSortOrder = async (orderType) => {
 
 {/* 내 레시피만 보기 */}
 const [my, setMy] = useState({
-    check: false,
-    checkFill: false,
+    check: true,
+    checkFill: true,
   });
 
   const handleCheckboxClick = (buttonName) => {
-    setMy((prevStates) => ({
-      ...prevStates,
-      [buttonName]: !prevStates[buttonName],
-    }));
-    navigation.navigate('UserRecipeTab');
-  }; 
 
-  const getImageForCheckbox = (buttonName) => {
-    if (my[buttonName]) {
-      switch (buttonName) {
-        case 'checkFill':
-          return require('../assets/icons/checkFill.png');
-        default:
-          return require('../assets/icons/check.png');
-      }
-    } 
-    else{
-      return require('../assets/icons/check.png');
-    }
-  };
+    navigation.navigate('RecipeTab');
+  }; 
 
    {/* 조리가능순 버튼 (난이도 재활용)*/}
    const [star, setStar] = useState({
@@ -156,7 +139,7 @@ const [my, setMy] = useState({
     if (star[buttonName]) {
       switch (buttonName) {
         case 'button2':
-          return require('../assets/icons/recommend.png');
+          return require('../assets/icons/quick.png');
         default:
           return require('../assets/icons/koreanOrder.png');
       }
@@ -202,7 +185,6 @@ const [my, setMy] = useState({
   };
 
   const isBookmarked = (recipeId) => {
-    console.log(bookmarkedRecipes.includes(recipeId))
     return bookmarkedRecipes.includes(recipeId);
   };
 
@@ -210,23 +192,6 @@ const [my, setMy] = useState({
     const newBookmarkStatus = !isBookmarked(recipeId);
     toggleBookmark(recipeId, newBookmarkStatus);
   };
-
-  const [book, setBook] = useState({
-    bookmarkFill: false,
-});
-
-const handleBookmarkClick = () => {
-    setBook((prevBook) => ({
-        ...prevBook,
-        bookmarkFill: !prevBook.bookmarkFill,
-    }));
-};
-
-const getImageForBookmark = () => {
-    return isBookmarked(recipe.id) 
-        ? require('../assets/icons/bookmark.png')
-        : require('../assets/icons/bookmarkFill.png');
-};
 
   return (
     <View style={styles.container}>
@@ -242,32 +207,34 @@ const getImageForBookmark = () => {
             value={searchQuery}
             keyboardType="default"
           />
+
           <View style = {styles.searchImg}>
             <Image source={require('../assets/icons/search.png')}/>
           </View>
         </View>
       </View>
-
-{/* 내 레시피만 보기 */}
+      
+      {/* 내 레시피만 보기 */}
 <View style={{flexDirection: 'row', marginTop: 10, gap: 4, marginLeft: 10}}>
   {/* 레시피 도움말 i버튼 */}
-  <TouchableOpacity
+  {/* <TouchableOpacity
         style={styles.infoBtn}
         onPress={() => setModalVisible(true)}>
         <Text style={styles.infoTxt}>i</Text>
-      </TouchableOpacity>
-        <Text style={{ fontSize: 10}}>
+      </TouchableOpacity> */}
+        <Text style={{ fontSize: 10, marginLeft: 10}}>
           내가 만든 레시피만 보기
         </Text>
-    <TouchableOpacity onPress={() => handleCheckboxClick('checkFill')}>
-        <Image source={getImageForCheckbox('checkFill')}/>
+    <TouchableOpacity onPress={() => navigation.navigate('RecipeTab')}>
+        <Image source={require('../assets/icons/checkFill.png')}/>
     </TouchableOpacity>
 
       {/* 조리가능 순 */}
-<TouchableOpacity onPress={() => handleSmallButtonClick('button2')} style={{ border: 'none', backgroundColor: 'transparent', left: 120, }}>
+{/* <TouchableOpacity onPress={() => handleSmallButtonClick('button2')} style={{ border: 'none', backgroundColor: 'transparent', left: 120, }}>
           <Image source={getImageForButton('button2')}/>
-        </TouchableOpacity>
-
+        </TouchableOpacity> */}
+    
+  </View>
   {/* 동그라미 추가 버튼 */}
       <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('AddRecipeMain')}>
         <Text style={{color: 'white', textAlign: 'center', fontSize: 47, bottom: 7, }}>+</Text>
@@ -284,15 +251,18 @@ const getImageForBookmark = () => {
               style={styles.post}
               onPress={() => navigation.navigate('UserRecipeMain', { recipeId: recipe.id })}>
          <View style={{width: 132, height: 70, left: 12, top: 9, borderRadius: 7, backgroundColor: '#ccc', alignItems: 'center', justifyContent: 'center'}}>
-           <Image source={photoImage(recipe.image)} style={{width: 120, height: 60, }} 
-           />
-         </View>
+         <Image
+          source={{ uri: recipe.image }}
+          defaultSource={require('../assets/icons/photoNotReady.png')}
+          style={{ width: 120, height: 60 }}
+        />
+        </View>
               <Text style={styles.foodText}>{recipe.name}</Text>
               <View style={{ left: 12, top: 15 }}>
               </View>
         <View style={{marginLeft: 7, flexDirection: 'row', top: 13}}>
           <Image style={{top: 15, marginLeft: 4}} source={require('../assets/icons/clock.png')}/>
-              <Text style={styles.timeText}>
+            <Text style={styles.timeText}>
               {recipe.time[0] !== 0 && `${recipe.time[0]}시간 `}
               {recipe.time[1] !== 0 && `${recipe.time[1]}분`} 이내
             </Text>
@@ -300,39 +270,85 @@ const getImageForBookmark = () => {
         <TouchableOpacity
               onPress={() => handleToggleBookmark(recipe.id)}
               style={[styles.bookmarkButton, { backgroundColor: isBookmarked(recipe.id) ? 'white' : 'white' }]}>
-              <Image source={isBookmarked(recipe.id) ? require('../assets/icons/bookmark.png') : require('../assets/icons/bookmarkFill.png')}/>
+              <Image source={isBookmarked(recipe.id) ? require('../assets/icons/bookmarkFill.png') : require('../assets/icons/bookmark.png')}/>
         </TouchableOpacity>
+
             </TouchableOpacity>
           ))}
         </View>
       </ScrollView>
-    
-      {/* Filtering and Sorting Controls */}
-      <View style={styles.controls}>
-        <View style={styles.filterSwitchContainer}>
-          <Text>Show User Recipes</Text>
-          <Switch
-            trackColor={{ false: "#767577", true: "#81b0ff" }}
-            thumbColor={showUserRecipes ? "#f5dd4b" : "#f4f3f4"}
-            ios_backgroundColor="#3e3e3e"
-            onValueChange={handleToggleSwitch}
-            value={showUserRecipes}
-          />
-        </View>
-        <TouchableOpacity style={styles.addButton} onPress={fetchRecipeData}>
-          <Text style={styles.addButtonText}>Add Recipe</Text>
-        </TouchableOpacity>
-        <View style={styles.sortButtons}>
-          <TouchableOpacity style={styles.sortButton} onPress={() => handleSortOrder('korean')}>
-            <Text>Sort by Korean</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.sortButton} onPress={() => handleSortOrder('lack')}>
-            <Text>Sort by Lack</Text>
-          </TouchableOpacity>
-          {/* Add more sorting buttons as needed */}
-      </View>
-    </View>
 
+        {/* 레시피 도움말 모달 */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+      <View style={{flexDirection: 'row', borderBottomWidth: 3, borderColor: '#FEA655', padding: 15, width: 304, justifyContent: 'center', }}> 
+          <Text style={{fontSize: 15, color: '#FEA655', }}>레시피</Text>
+            <Text style={{fontSize: 15,}}>에서는 무엇을 하나요?</Text>
+</View> 
+
+  <View style={{ padding: 20, width: 304, justifyContent: 'center', }}> 
+  <View style={{flexDirection: 'row',}}>
+          <Text style={{fontSize: 12, color: '#FEA655', }}>레시피</Text>
+            <Text style={{fontSize: 12,}}>에서는 </Text>
+            <Text style={{fontSize: 12, color: '#FEA655', }}>냉장고</Text>
+<Text style={{fontSize: 12,}}>에 등록한 재료 목록을 기반 </Text> 
+  </View>
+  <Text style={{fontSize: 12,}}>으로, 조리 가능한 레시피 목록과 부족한 재료의 개수를 볼 수 있습니다. </Text>
+
+<View style={{justifyContent: 'center', flexDirection: 'row', gap: 5}}>
+  <Image style={{marginTop: 10}} source={require('../assets/icons/koreanOrder.png')}/>
+  <Image style={{marginTop: 10}} source={require('../assets/icons/quick.png')}/>
+</View>
+
+   <Text style={{fontSize: 12, top: 8, marginVertical: 5}}>
+   위 두가지 필터를 통해 레시피 목록의 정렬 순서를 변경할 수 있습니다.</Text> 
+
+<View style={{alignItems: 'center'}}>
+  <Image style={{marginTop: 13, }} source={require('../assets/icons/bookmarkFill.png')}/>
+</View>
+
+   <Text style={{fontSize: 12, top: 8, marginVertical: 5}}>
+    레시피 박스 우측 하단 북마크를 이용하여 원하는</Text> 
+
+  <View style={{flexDirection: 'row', marginTop: 3}}>
+    <Text style={{fontSize: 12,}}>
+    레시피를 </Text> 
+    <Text style={{fontSize: 12, color: '#FEA655',}}>
+    북마크</Text> 
+    <Text style={{fontSize: 12,}}>
+    에서 따로 모아볼 수 있습니다.</Text> 
+</View>
+
+<View style={{alignItems: 'center'}}>
+  <Image style={{marginTop: 13, }} source={require('../assets/icons/add.png')}/>
+</View>
+
+<Text style={{fontSize: 12,  marginVertical: 5}}>
+    우측 하단의 버튼을 이용하여 내가 만든 레시피를 등록할 수 있습니다. </Text> 
+
+<View style={{alignItems: 'center'}}>
+    <Image style={{marginTop: 13,}} source={require('../assets/icons/isMyRecipe.png')}/>
+</View>
+    <Text style={{fontSize: 12, top: 8, marginVertical: 5}}>
+     좌측 상단의 체크박스를 이용하여 내가 만든 레시피만 따로 볼 수 있습니다.</Text> 
+ </View> 
+
+    <TouchableOpacity
+              style={{width: 304, borderTopWidth: 2, borderColor: '#ccc'}}
+              onPress={() => setModalVisible(!modalVisible)}>
+              <Text style={{fontSize: 15, color: '#000', textAlign: 'center', padding: 10}}>확인</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   )
 };
@@ -341,12 +357,13 @@ const getImageForBookmark = () => {
 const styles = StyleSheet.create({
     container: {
     backgroundColor: '#F8F9FA', // 배경색상 추가
-    height: '100%',
+    height: 'auto',
   },
   containerScroll: {
-    top: 20,
+    top: 10,
     backgroundColor: '#F8F9FA', // 배경색상 추가
     height: 'auto',
+    marginBottom: 50
   },
   cont: {
     flexDirections: 'row',
@@ -416,11 +433,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40, 
     paddingBottom: 80, 
     gap: 20,
-    //marginTop: 10
   
   },
   searchWrapper:{
-    //top: 7,
     width: 299,
     height: 48,
     borderRadius: 15,  
@@ -485,8 +500,8 @@ const styles = StyleSheet.create({
     left: 120,
     width: 16,
     height: 20,
-    borderColor: 'grey',
+    borderColor: 'black',
   },
 });
 
-export default RecipeTab;
+export default UserRecipeTab;
