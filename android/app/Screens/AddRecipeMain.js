@@ -1,5 +1,13 @@
 {/* 부족한 부분: 항목이 채워진 조건하에 버튼이 채워지게, 조리시간 & 별컴 db연결, 요리이름 인풋창 한쪽으로만 늘어나게하기, 사진추가 누르면 갤러리연동 */}
 
+{/**
+전체 map
+조리 시간 array
+포토
+난이도
+조리 과정 array
+재료 map
+*/}
 import React, { useState } from 'react';
 import { Text, View, TouchableOpacity, TextInput, StyleSheet, Modal, Image } from 'react-native';
 
@@ -8,9 +16,9 @@ const AddRecipeMain = ({navigation}) => {
   const [hour, setHour] = useState('');
   const [min, setMin] = useState('');
   const [cookingTime, setCookingTime] = useState('');
-
+  const [userRecipeImage, setUserRecipeImage] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
-
+  const [userIngredients, setUserIngredients] =useState([]);
 
 {/* 별컴포넌트 */}
   const [star, setStar] = useState({
@@ -163,23 +171,23 @@ onChangeText={(text) => setMin(text)}
       />
     
 {/* 필요한 재료 */}
-<TouchableOpacity
-        style={{ right: 62, top: 240,
-        backgroundColor: '#FFFFFF',
+  <TouchableOpacity
+    style={{ right: 62, top: 240,
+    backgroundColor: '#FFFFFF',
     paddingVertical: 5,
     width: 215,
     height: 330,
     borderRadius: 10, }}
-        onPress={() => navigation.navigate('Ingredients')}>
-        <Image style={{right: 180, top: 10, zIndex: 2, position: 'absolute' }} source={require('../assets/icons/bowl.png')}/>
-        <Text style={{
-          top: 150,
-          color: '#9C9C9C', 
-        fontSize: 12, 
-        textAlign: 'center',
-        }}>
-        필요한 재료</Text>
-      </TouchableOpacity>
+    onPress={() => navigation.navigate('Ingredients')}>
+    <Image style={{right: 180, top: 10, zIndex: 2, position: 'absolute' }} source={require('../assets/icons/bowl.png')}/>
+    <Text style={{
+      top: 150,
+      color: '#9C9C9C', 
+      fontSize: 12, 
+      textAlign: 'center',
+     }}>
+     필요한 재료</Text>
+    </TouchableOpacity>
 
 
   {/* 조리시간 */}
@@ -262,7 +270,8 @@ onChangeText={(text) => setMin(text)}
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.buttonUnfill}
-        onPress={() => navigation.navigate('AddProgress')}>
+        onPress={() =>navigation.navigate('AddProgress', {cookingTime: cookingTime,  recipe_difficulty:  recipe_difficulty, food:food})
+      }>
         <Text style={styles.buttonColorText}>다음</Text>
       </TouchableOpacity>
   </View>

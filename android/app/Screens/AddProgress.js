@@ -1,10 +1,12 @@
 import React, {useState} from 'react';
 import { NavigationContainer, Text, Button, View, TouchableOpacity,TextInput, ScrollView, StyleSheet, Image, Dimensions, SafeAreaView} from 'react-native';
+import { useRoute } from '@react-navigation/native';
+import {useParams, useNavigate} from 'react-router-dom';
+
 
 {/* 레시피입력 박스 컴포넌트*/}
 const DetailList = ({ countList }) => {
   let s=0
-  
   return (
     <View>
       {countList && countList.map((item, i) => (
@@ -22,12 +24,13 @@ const DetailList = ({ countList }) => {
           </View>
         </View>
       ))}
+   
     </View>
   );
 };
 
 {/* 조리과정 작성 스크린 */}
-function AddProgress({navigation}) {
+function AddProgress({navigation, route}) {
   const [text, onChangeText] = React.useState('');
 
   const [countList, setCountList] = useState([0])
@@ -39,7 +42,11 @@ function AddProgress({navigation}) {
     countArr.push(counter)
     setCountList(countArr)
   }
-
+  const { cookingTime, recipe_difficulty, food } = route.params;
+  const [recipeData,setRecipeData]=useState([{cookingTime, recipe_difficulty, food, countList:[]}]);
+  const handleRecipeData = () =>{
+    console.log(recipeData);
+  }
   return (
   <SafeAreaView>
     <ScrollView>
@@ -88,11 +95,16 @@ function AddProgress({navigation}) {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('Login')}>
+          onPress={() =>{ navigation.navigate('Login'); handleRecipeData();}}>
           <Text style={styles.buttonText}>레시피 등록</Text>
         </TouchableOpacity>
         </View>
        </View>
+       {recipeData && recipeData.map((item, idx) =>{
+        console.log(item.cookingTime);
+        console.log(item.recipe_difficulty);
+        console.log(item.food);
+        })}
     </ScrollView>
   </SafeAreaView>
   );

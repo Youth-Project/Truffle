@@ -8,7 +8,9 @@ import auth from '@react-native-firebase/auth';
 
 const Stack = createNativeStackNavigator();
 
+
 function App() {
+  /*
   export function signIn({email, password}) {
     return auth().signInWithEmailAndPassword(email, password);
   }
@@ -21,6 +23,8 @@ function App() {
     return auth().onAuthStateChanged(callback);
   }
 
+*/
+const [signUp, setSignUp] = useState(true);
 
   return (
     <NavigationContainer independent={true}>

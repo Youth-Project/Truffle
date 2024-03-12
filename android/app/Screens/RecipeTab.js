@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, Switch } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, Switch, ScrollView } from 'react-native';
 import firestore from "@react-native-firebase/firestore";
 
 const RecipeTab = ({ navigation }) => {
@@ -75,6 +75,7 @@ const RecipeTab = ({ navigation }) => {
   };
 
   return (
+    <ScrollView>
     <View style={styles.container}>
       <View style={styles.row}>
         {recipeData.map((recipe) => (
@@ -97,6 +98,10 @@ const RecipeTab = ({ navigation }) => {
         ))}
       </View>
     </View>
+    <TouchableOpacity onPress={()=> navigation.navigate('AddRecipeMain')}>
+    <Text style={{ color: '#F8F9FA',}}>go to add recipe</Text>
+    </TouchableOpacity>
+    </ScrollView>
   );
 };
 
