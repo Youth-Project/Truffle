@@ -7,15 +7,16 @@ import { View, Text, StyleSheet, TouchableOpacity, Modal,
   TextInput,
   Image,SafeAreaView, FlatList
 } from 'react-native';
-import  {  vegetable, bread, fruit, sausage, seafood, truffle, noodle, spice, bean, grain, meat, milk }  from './IngredientsArray';
+import  { foods }  from './IngredientsArray';
 import SearchIcon from "../assets/icons/SearchIcon";
-import { switchUnitConversion, updateUsersRefrigeratorAddedFromIngredient, showOnRefrigerator } from '../BackFunc/RecipeFunc';
+import { updateUsersRefrigeratorAddedFromIngredient, showOnRefrigerator, fetchUserRefrigerator, fetchIngredient, getAndUpdateFinishedRecipesIngredient, fetchRecipeAll, ingredientSearchFilter } from '../BackFunc/RecipeFunc'; 
+
 
 const Ingredients = () => {
   const screenHeight = Dimensions.get("screen").height;
   //--검색 쿼리--\\
   const [searchQuery, setSearchQuery] = useState('');
-  const allIngredients = [...vegetable, ...bread, ...fruit, ...sausage, ...seafood, ...truffle, ...noodle, ...spice, ...bean, ...grain, ...meat, ...milk];
+  const allIngredients = [...foods];
   const filteredData = searchQuery
     ? allIngredients.filter(item =>
         item.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -27,23 +28,21 @@ const Ingredients = () => {
       setIsTextInput(false)
     }
   }
+  //--모달--\\
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible2, setModalVisible2] = useState(false);
+  const [isInputSet,setIsInputSet] = useState(false);
   const [selectedIngredient, setSelectedIngredient] = useState([])
 
   const updateSelectedIngredient = async() => {
     try{
-    const ingredientInRef = await showOnRefrigerator();
-    await setSelectedIngredient(ingredientInRef);
-    console.log('showOnOutput: ', ingredientInRef);
-    console.log('updateSelectedIngredient: ', selectedIngredient);
+      await updateUsersRefrigeratorAddedFromIngredient(inputValue, itemClicked, conversion, foodUnits, foodCategory);
+      // await showRef();
     }
     catch(error){
       console.error('error in front: ', error)
     }
   }
-  //--모달--\\
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modalVisible2, setModalVisible2] = useState(false);
-  const [isInputSet,setIsInputSet] = useState(false);
   const isValidInput = (inputValue) =>{
       inputValue.trim()===''?setIsInputSet(true):setIsInputSet(false);
       return(isInputSet);
@@ -236,9 +235,8 @@ const Ingredients = () => {
                     <TouchableOpacity style= {styles.nextButton} onPress={()=>{
                          if (!isValidInput(inputValue)) { 
                           closeModal(); 
-                          updateUsersRefrigeratorAddedFromIngredient(inputValue, itemClicked, conversion, foodUnits, foodCategory);
-                        }
                           updateSelectedIngredient();
+                        }
                           }}>                            
                         <Text style={styles.next}>저장하기</Text>
                     </TouchableOpacity>

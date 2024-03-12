@@ -1,10 +1,10 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal, Image,
-  Animated, TouchableWithoutFeedback, Dimensions, PanResponder, TextInput,} from 'react-native';
+  Animated, TouchableWithoutFeedback, Dimensions, PanResponder, TextInput } from 'react-native';
 import BottomSheet from '../components/BottomSheet';
 import RefTruffleLogo from "../assets/logo/RefTruffleLogo";
-import { updateUsersRefrigeratorAddedFromIngredient, showOnRefrigerator } from '../BackFunc/RecipeFunc'; 
+import { updateUsersRefrigeratorAddedFromIngredient, showOnRefrigerator, deleteIngredient } from '../BackFunc/RecipeFunc'; 
+import EditBTN from "../assets/icons/EditBTN";
 
 const RefTab = () => {
   const [isItem, setIsItem] = useState(false);
@@ -23,22 +23,35 @@ const RefTab = () => {
 
   const updateSelectedIngredient = async() => {
     try{
-      checkIsItem(selectedIngredient);
+      await updateUsersRefrigeratorAddedFromIngredient(inputValue, itemClicked, conversion, foodUnits, foodCategory);
+      await showRef();
+    }
+    catch(error){
+      console.error('error in front: ', error)
+    }
+  }
+
+  const showRef = async() => {
+    try{
+      // checkIsItem(selectedIngredient);
+      // await updateUsersRefrigeratorAddedFromIngredient(inputValue, itemClicked, conversion, foodUnits, foodCategory);
       const ingredientInRef = await showOnRefrigerator();
-      updateUsersRefrigeratorAddedFromIngredient(inputValue, itemClicked, conversion, foodUnits, foodCategory);
+      // console.log(ingredientInRef)
       setSelectedIngredient(ingredientInRef);
     }
     catch(error){
       console.error('error in front: ', error)
     }
   }
-  
+
   useEffect(() => {
-    updateSelectedIngredient();
+    showRef();
+    checkIsItem(selectedIngredient);
   });
+
   
   const isValidInput = (inputValue) =>{
-      inputValue.trim()===''?setIsInputSet(true):setIsInputSet(false);
+      inputValue.trim()===''?setIsInputSet(false):setIsInputSet(true);
       return(isInputSet);
   }
   const changeConversion = (foodUnits) =>{
@@ -63,11 +76,9 @@ const RefTab = () => {
   const pressButton = () => {
       setModalVisible(true);
   };
-
   const pressButton2 = () => {
       setModalVisible2(true);
   };
-
     const screenHeight = Dimensions.get("screen").height;
     const panY = useRef(new Animated.Value(screenHeight)).current;
     const translateY = panY.interpolate({
@@ -113,7 +124,7 @@ const RefTab = () => {
         closeBottomSheet.start(()=>{
             setModalVisible(false);
         })
-        updateSelectedIngredient();
+        // updateSelectedIngredient();
     }
     const [inputValue, setInputValue] = useState('');
 
@@ -139,11 +150,11 @@ const RefTab = () => {
           </View>
         </View>
       )}
-
       {isItem && (
         <View style={styles.container}>
           <View style={styles.foodCont}>
             <ScrollView style={{ gap: 11, width:'85%' }}>
+              {/* <View style={styles.foods}> */}
               <View>
                   {selectedIngredient && selectedIngredient.map((food, index) => (
                     <View key={index} style={styles.foods}>
@@ -161,16 +172,17 @@ const RefTab = () => {
                         }}
                         style={styles.pencil}
                       >
+                          <EditBTN></EditBTN>
                         {/* EditIngredientsIcon component */}
                       </TouchableOpacity>
                     </View>
                   ))}
                 </View>
+              {/* </View> */}
             </ScrollView>
           </View>
         </View>
       )}
-
        <Modal
             visible={modalVisible}
             animationType={"fade"}
@@ -210,7 +222,7 @@ const RefTab = () => {
                         />
                         <Text style={styles.units}>{foodUnits}</Text>
                     </View>
-                    {isInputSet && (
+                    {!isInputSet && (
                       <Text style={styles.alaramMessage}>
                         수량과 단위를 선택해 주세요.
                       </Text>
@@ -235,11 +247,11 @@ const RefTab = () => {
                         </TouchableOpacity>
                     </View>
                     <View style={styles.buttonContainer}>
-                        <TouchableOpacity style= {styles.deleteButton} onPress={closeModal}>
+                        <TouchableOpacity style= {styles.deleteButton} onPress={()=>{closeModal(); deleteIngredient(itemClicked);}}>
                             <Text style={styles.delete}>삭제하기</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style= {styles.nextButton} onPress={()=>{
-                         if (!isValidInput(inputValue)) { 
+                         if (isValidInput(inputValue)) { 
                           closeModal(); 
                           updateSelectedIngredient();
                         }
@@ -257,16 +269,15 @@ const RefTab = () => {
                 setModalVisible={setModalVisible2}
             />
         </View>
-      <View style={styles.grayBox}></View>
     </View>
     
   );
 };
 const styles = StyleSheet.create({
  container:{
-  // backgroundColor:'black',
+  backgroundColor:'#F8F9FA',
   width: '100%',
-  // height: '100%',
+  height: '100%',
   // marginTop : 36,
   // marginBottom: 66,
   display: 'flex',
@@ -304,6 +315,7 @@ const styles = StyleSheet.create({
   imgContainer: {
     width: 156,
     height: 156,
+    // backgroundColor: 'purple',
     marginTop: '65%',
   },
   statusText: {
@@ -386,7 +398,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'purple'
+    // backgroundColor: 'purple'
   },
   bottomSheetContent: {
     backgroundColor: '#F8F9FA',
@@ -482,6 +494,7 @@ const styles = StyleSheet.create({
   },
   unitSelect:{
       fontSize: 15,
+      // backgroundColor: 'purple',
       width: 40,
       height: 40,
       display: 'flex',

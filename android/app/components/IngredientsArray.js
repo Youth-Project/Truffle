@@ -1,5 +1,4 @@
-
-const vegetable = [
+const foods = [
   // 채소
   { name: '가지',  img: require('../assets/ingredients/EggplantIcon.png'), category: 'vegetable' },
   { name: '고추',  img: require('../assets/ingredients/PepperIcon.png'), category: 'vegetable' },
@@ -29,9 +28,7 @@ const vegetable = [
   { name: '표고버섯',  img: require('../assets/ingredients/ShiitakeMushroomIcon.png'), category: 'vegetable' },
   { name: '호박',  img: require('../assets/ingredients/PumpkinIcon.png'), category: 'vegetable' },
   { name: '숙주',  img: require('../assets/ingredients/MungBeanSproutsIcon.png'), category: 'vegetable' },
-];
 
-const bread = [
   // 빵/떡
   { name: '가래떡',  img: require('../assets/ingredients/RicecakeIcon.png'), category: 'bread_ricecake' },
   { name: '떡국떡',  img: require('../assets/ingredients/TteokgukricecakeIcon.png'), category: 'bread_ricecake' },
@@ -40,9 +37,7 @@ const bread = [
   { name: '베이글',  img: require('../assets/ingredients/BagelIcon.png'), category: 'bread_ricecake' },
   { name: '식빵',  img: require('../assets/ingredients/BreadIcon.png'), category: 'bread_ricecake' },
   { name: '모닝빵',  img: require('../assets/ingredients/MorningBreadIcon.png'), category: 'bread_ricecake' },
-];
 
-const sausage = [
   // 햄/소시지
   { name: '미트볼',  img: require('../assets/ingredients/MeatballIcon.png'), category: 'ham_sausage' },
   { name: '베이컨',  img: require('../assets/ingredients/BaconIcon.png'), category: 'ham_sausage' },
@@ -51,9 +46,7 @@ const sausage = [
   { name: '순대',  img: require('../assets/ingredients/SundaeIcon.png'), category: 'ham_sausage' },
   { name: '스팸',  img: require('../assets/ingredients/SpamIcon.png'), category: 'ham_sausage' },
   { name: '햄',  img: require('../assets/ingredients/HamIcon.png'), category: 'ham_sausage' },
-];
 
-const seafood = [
   // 해산물
   { name: '갈치',  img: require('../assets/ingredients/CutlassfishIcon.png'), category: 'seafood' },
   { name: '건새우',  img: require('../assets/ingredients/DriedshrimpIcon.png'), category: 'seafood' },
@@ -86,9 +79,7 @@ const seafood = [
   { name: '조기',  img: require('../assets/ingredients/CroakerIcon.png'), category: 'seafood' },
   { name: '쭈꾸미',  img: require('../assets/ingredients/WebfootoctopusIcon.png'), category: 'seafood' },
   { name: '홍합',  img: require('../assets/ingredients/MusselIcon.png'), category: 'seafood' },
-];
 
-const milk = [
   // 유제품
 
   { name: '계란',  img: require('../assets/ingredients/EggIcon.png'), category: 'dairy' },
@@ -96,18 +87,14 @@ const milk = [
   { name: '모짜렐라 치즈',  img: require('../assets/ingredients/MozzarellaIcon.png'), category: 'dairy' },
   { name: '요거트',  img: require('../assets/ingredients/YogurtIcon.png'), category: 'dairy' },
   { name: '체다치즈',  img: require('../assets/ingredients/CheddarCheeseIcon.png'), category: 'dairy' },
-];
 
-const meat = [
   // 고기류
   { name: '닭고기',  img: require('../assets/ingredients/ChickenIcon.png'), category: 'meat' },
   { name: '돼지고기',  img: require('../assets/ingredients/PorkIcon.png'), category: 'meat' },
   { name: '소고기',  img: require('../assets/ingredients/BeefIcon.png'), category: 'meat' },
   { name: '양고기',  img: require('../assets/ingredients/LambIcon.png'), category: 'meat' },
   { name: '오리고기',  img: require('../assets/ingredients/DuckMeatIcon.png'), category: 'meat' },
-];
 
-const fruit = [
   // 과일
   { name: '감',  img: require('../assets/ingredients/PersimmonIcon.png'), category: 'fruit' },
   { name: '건포도',  img: require('../assets/ingredients/RaisinIcon.png'), category: 'fruit' },
@@ -130,9 +117,7 @@ const fruit = [
   { name: '키위',  img: require('../assets/ingredients/KiwiIcon.png'), category: 'fruit' },
   { name: '파인애플',  img: require('../assets/ingredients/PineappleIcon.png'), category: 'fruit' },
   { name: '포도',  img: require('../assets/ingredients/GrapeIcon.png'), category: 'fruit' },
-];
 
-const grain = [
   // 곡물
   { name: '감자',  img: require('../assets/ingredients/PotatoIcon.png'), category: 'grain', },
   { name: '고구마',  img: require('../assets/ingredients/SweetPotatoIcon.png'), category: 'grain' },
@@ -144,9 +129,7 @@ const grain = [
   { name: '옥수수',  img: require('../assets/ingredients/CornIcon.png'), category: 'grain' },
   { name: '찹쌀가루',  img: require('../assets/ingredients/GlutinousRicePowderIcon.png'), category: 'grain' },
   { name: '통밀',  img: require('../assets/ingredients/WholeWheatIcon.png'), category: 'grain' },
-];
 
-const bean = [
   // 콩/견과류
   { name: '검은콩',  img: require('../assets/ingredients/BlackBeansIcon.png'), category: 'bean_nuts', },
   { name: '깨',  img: require('../assets/ingredients/SesameIcon.png'), category: 'bean_nuts' },
@@ -157,11 +140,11 @@ const bean = [
   { name: '완두콩',  img: require('../assets/ingredients/PeaIcon.png'), category: 'bean_nuts' },
   { name: '콩',  img: require('../assets/ingredients/BeanIcon.png'), category: 'bean_nuts' },
   { name: '호두',  img: require('../assets/ingredients/WalnutIcon.png'), category: 'bean_nuts' },
-];
 
-const spice = [
   // 조미료/양념
-  { name: '간장',  img: require('../assets/ingredients/SoySauceIcon.png'), category: 'seasoning', },
+  { name: '진간장',  img: require('../assets/ingredients/SoySauceIcon.png'), category: 'seasoning', },
+  { name: '국간장',  img: require('../assets/ingredients/SoySauceIcon.png'), category: 'seasoning', },
+  { name: '양조간장',  img: require('../assets/ingredients/SoySauceIcon.png'), category: 'seasoning', },
   { name: '고추장',  img: require('../assets/ingredients/ChiliPepperPasteIcon.png'), category: 'seasoning' },
   { name: '고춧가루',  img: require('../assets/ingredients/ChiliPowderIcon.png'), category: 'seasoning' },
   { name: '굴소스',  img: require('../assets/ingredients/OysterSauceIcon.png'), category: 'seasoning' },
@@ -199,9 +182,7 @@ const spice = [
   { name: '토마토소스',  img: require('../assets/ingredients/TomatoSauceIcon.png'), category: 'seasoning' },
   { name: '핫소스',  img: require('../assets/ingredients/HotSauceIcon.png'), category: 'seasoning' },
   { name: '후추',  img: require('../assets/ingredients/PepperIcon.png'), category: 'seasoning' },
-];
 
-const noodle = [
   // 면
   { name: '당면',  img: require('../assets/ingredients/NoodleIcon.png'), category: 'noodle', },
   { name: '라면',  img: require('../assets/ingredients/RamenIcon.png'), category: 'noodle' },
@@ -211,19 +192,13 @@ const noodle = [
   { name: '우동면',  img: require('../assets/ingredients/UdongNoodlesIcon.png'), category: 'noodle' },
   { name: '칼국수면',  img: require('../assets/ingredients/KalguksuNoodlesIcon.png'), category: 'noodle' },
 
-];
 
-const truffle = [
   // 트러플
   { name: '트러플',  img: require('../assets/ingredients/TruffleIcon.png'), category: 'truffle', },
   { name: '트러플소금',  img: require('../assets/ingredients/TruffleSaltIcon.png'), category: 'truffle' },
   { name: '트러플오일',  img: require('../assets/ingredients/TruffleOilIcon.png'), category: 'truffle' },
+
 ];
 
-const selected = [
-  // 빈어레이
-  { name: '트러플소금', amount: 0, unit: 'g', img: require('../assets/ingredients/TruffleSaltIcon.png'), category: 'truffle' },
-  { name: '트러플오일', amount: 0, unit: 'g', img: require('../assets/ingredients/TruffleOilIcon.png'), category: 'truffle' },
-];
 
-export { vegetable, bread, fruit, sausage, seafood, truffle, noodle, spice, bean, grain, meat, milk, selected };
+export { foods };

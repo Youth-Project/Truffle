@@ -71,7 +71,7 @@ const updatePassword = async (password, userId) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.back} onPress={() => navigation.goBack()}>
-        <Text style={styles.backBTN}> ⟨ </Text>
+        <Text style={styles.backBTN}> 〈 </Text>
       </TouchableOpacity>
       <Text style={styles.topTitle}>비밀번호 재설정</Text>
       <TextInput

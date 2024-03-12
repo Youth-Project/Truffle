@@ -1,22 +1,24 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { NavigationContainer, Text, Button, View, TouchableOpacity,TextInput, ScrollView, StyleSheet, Image, Dimensions, SafeAreaView} from 'react-native';
+<<<<<<< HEAD
 import { useRoute } from '@react-navigation/native';
 import {useParams, useNavigate} from 'react-router-dom';
 
+=======
+import AsyncStorage from '@react-native-async-storage/async-storage';
+>>>>>>> 63e3cb5868569e51118299a2897e114422cc7821
 
 {/* 레시피입력 박스 컴포넌트*/}
 const DetailList = ({ countList }) => {
   let s=0
   return (
-    <View>
+    <View style={{gap: 10}}>
       {countList && countList.map((item, i) => (
         <View key={i}>
-
           <View style={styles.recipeboxContainer}>
             <Text style={{fontWeight: 'bold', fontSize: 16, left: 0, }}>
             {++s}.
             </Text>
-            
             <TextInput numberOfLines={2}
               style={{fontSize: 12, flexShrink : 1 }}
               placeholder="레시피 입력 (최대 85자)"
@@ -42,35 +44,62 @@ function AddProgress({navigation, route}) {
     countArr.push(counter)
     setCountList(countArr)
   }
+<<<<<<< HEAD
   const { cookingTime, recipe_difficulty, food } = route.params;
   const [recipeData,setRecipeData]=useState([{cookingTime, recipe_difficulty, food, countList:[]}]);
   const handleRecipeData = () =>{
     console.log(recipeData);
   }
+=======
+
+  useEffect(() => {
+    // 전달된 데이터를 가져와서 상태에 설정
+  const loadUserData = async () => {
+    // AsyncStorage에서 데이터 불러오기
+    try {
+      await AsyncStorage.getItem('ingredients');
+      await AsyncStorage.getItem('time');
+      await AsyncStorage.getItem('difficulty');
+    } catch (error) {
+      console.error('사용자 정보를 불러오지 못했습니다:', error);
+    }
+  };
+
+loadUserData();
+  }, []);
+
+
+  const handlePress = () => {
+    alert('레시피 등록이 완료되었습니다 !');
+    navigation.navigate('RecipeTab');
+  };
+
+>>>>>>> 63e3cb5868569e51118299a2897e114422cc7821
   return (
   <SafeAreaView>
     <ScrollView>
-      <View style={styles.container}>
+-     <View style={styles.container}>
         <Text style={styles.cookText}>조리과정 작성</Text>
           <ScrollView style={styles.cookScrollContainer}>
           {/*<ScrollView style={{top: 100, height: 'auto'}}> */}
           <View style={{ margin: 4, alignItems: 'center'}}>
-          <DetailList countList={countList} />
- 
-          <TouchableOpacity
-          style={{ alignItems: 'center',
-          backgroundColor: '#FFFFFF',
-          marginTop: 10,
-          borderWidth: 1,
-          borderColor: '#CCCCCC',
-          paddingVertical: 5,
-          width: 110,
-          borderRadius: 9, }}
-          onPress={onAddDetailDiv}>
-          <Text style={styles.addText}>+ 과정추가</Text>
-          </TouchableOpacity>
+            <DetailList countList={countList} />
+
+            <TouchableOpacity
+              style={{ alignItems: 'center',
+              backgroundColor: '#FFFFFF',
+              marginTop: 10,
+              borderWidth: 1,
+              borderColor: '#CCCCCC',
+              paddingVertical: 5,
+              width: 110,
+              borderRadius: 9, }}
+              onPress={onAddDetailDiv}>
+              <Text style={styles.addText}>+ 과정추가</Text>
+            </TouchableOpacity>
           </View>
           </ScrollView> 
+<<<<<<< HEAD
 
         <View style={styles.row}>
         <TouchableOpacity
@@ -105,8 +134,41 @@ function AddProgress({navigation, route}) {
         console.log(item.recipe_difficulty);
         console.log(item.food);
         })}
+=======
+      </View>
+>>>>>>> 63e3cb5868569e51118299a2897e114422cc7821
     </ScrollView>
+    <View style={{backgroundColor: '#F8F9FA', width: 500, height: 100, position: 'absolute', top: 640}}></View>
+    <View style={styles.row}>
+              <TouchableOpacity
+              style={{ top: 85,
+                backgroundColor: '#F8F9FA',
+                borderWidth: 1,
+                borderColor: '#CCCCCC',
+                paddingVertical: 10,
+                width: 140,
+                borderRadius: 25,
+                marginBottom: 20, }}
+                onPress={() => navigation.goBack()}>
+                <Text style={{
+                  color: '#CCCCCC', 
+                  fontSize: 15, 
+                  fontWeight: 'bold',
+                  textAlign: 'center',
+                  fontFamily: 'NanumGothic',
+                }}>
+                 뒤로가기</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={handlePress}>
+                <Text style={styles.buttonText}>레시피 등록</Text>
+              </TouchableOpacity>
+          </View>
+          
   </SafeAreaView>
+  
+  
   );
 }
 
@@ -114,17 +176,20 @@ function AddProgress({navigation, route}) {
 const styles = StyleSheet.create({
   container: {
     width: Dimensions.get('window').width,
-    height:Dimensions.get('window').height,
+    height: '100%',
     alignItems: 'center',
     flex: 1,
-    backgroundColor: '#F8F9FA', // 배경색상 추가
+    backgroundColor: '#F8F9FA',
+    // backgroundColor: 'purple', // 배경색상 추가
   },
   row: {
     position: 'absolute',
     top: 570,
-    flexDirection: 'row', 
+    flexDirection: 'row',
     justifyContent: 'space-evenly',
-    gap: 25,
+    gap: 5,
+    width: '100%',
+    alignItems: 'center',
   },
   button: {
     top: 85,
@@ -156,7 +221,7 @@ const styles = StyleSheet.create({
   },
   cookText:{
     fontSize: 20,
-    top: 80,
+    top: 30,
     right: 240,
     fontWeight: 'bold',
     color: '#000',
@@ -174,14 +239,14 @@ const styles = StyleSheet.create({
   
   },
   cookScrollContainer:{
-    top: 138,
+    top: 100,
     backgroundColor: '#F8F9FA', // 배경색상 추가
-    height: 'auto',
-    marginBottom: 280,
+    height: '50%',
+    marginBottom: 250,
   },
   addText:{
     color: '#CCCCCC', 
-    ontSize: 15, 
+    fontSize: 15, 
     fontWeight: 'bold',
     textAlign: 'center',
   }

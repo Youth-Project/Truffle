@@ -20,13 +20,13 @@ const RecipeDetail = ({ navigation, route }) => {
       try {
         const { recipeId } = route.params;
         const recipeDoc = await firestore()
-          .collection('recipes')
-          .doc(recipeId)
+          .collection('users')
+          .doc(‎xxvkRzKqFcWLVx4hWCM8GgQf1hE3)
           .get();
 
         if (recipeDoc.exists) {
           const recipeData = recipeDoc.data();
-          const recipeSteps = recipeData.recipe_steps || [];
+          const recipeSteps = recipeData.user_recipe_steps || [];
           setSteps(recipeSteps);
         }
         
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F8F9FA',
     marginBottom: 85,
-    height: '100%'
+    height: '100%',
   },
   header: {
     backgroundColor: '#FFFFFF',

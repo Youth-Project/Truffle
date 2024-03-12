@@ -38,7 +38,7 @@ function SignupPg() {
       await firestore().collection(user.uid).doc(today).set({
         amount:0
       });
-      navigation.navigate('Loginpg');
+      navigation.navigate('LoginpgStack');
     } catch (error) {
       console.error('Error signing up:', error);
     }
@@ -63,13 +63,13 @@ const [eye, setEye] = useState({
     if (eye[buttonName]) {
       switch (buttonName) {
         case 'eyeOpen':
-          return require('../assets/icons/Eye');
+          return require('../assets/icons/eyeOn.png');
         default:
-          return require('../assets/icons/Eye');
+          return require('../assets/icons/eye.png');
       }
     } 
     else{
-      return require('../assets/icons/Eye');
+      return require('../assets/icons/eye.png');
     }
   };
 
@@ -92,13 +92,13 @@ const [eye2, setEye2] = useState({
     if (eye2[buttonName]) {
       switch (buttonName) {
         case 'eyeOpen':
-          return require('../assets/icons/Eye');
+          return require('../assets/icons/eyeOn.png');
         default:
-          return require('../assets/icons/Eye');
+          return require('../assets/icons/eye.png');
       }
     } 
     else{
-      return require('../assets/icons/Eye');
+      return require('../assets/icons/eye.png');
     }
   };
 
@@ -159,8 +159,8 @@ const validateEmail = email => {
     <View style={styles.container}>
       <TouchableOpacity
         style={styles.back}
-        onPress={() => navigation.navigate('Loginpg')}>
-        <Text style={styles.backBTN}> ⟨ </Text>
+        onPress={() => navigation.navigate('LoginpgStack')}>
+        <Text style={styles.backBTN}> 〈 </Text>
       </TouchableOpacity>
 
       <Text style={styles.topTitle}>회원가입</Text>
@@ -219,7 +219,7 @@ const validateEmail = email => {
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.log}
-        onPress={() => navigation.navigate('Reset')}>
+        onPress={() => navigation.navigate('LoginpgStack')}>
         <Text style={styles.saveTxt}>이미 계정이 있나요?  로그인하기</Text>
       </TouchableOpacity>
     </View>

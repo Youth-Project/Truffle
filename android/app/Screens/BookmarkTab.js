@@ -1,85 +1,60 @@
 import React, { useState, useEffect } from 'react';
-import { TouchableOpacity, Image, Text, View, FlatList, StyleSheet } from 'react-native';
+import { TouchableOpacity, Image, Text, ScrollView, View, FlatList, StyleSheet } from 'react-native';
 import firestore from "@react-native-firebase/firestore";
 
 const BookMarkItem = ({ item, navigation }) => {
-    const [bookmarkFill, setBookmarkFill] = useState(false);
+    const [book, setBook] = useState({
+        bookmarkFill: false,
+    });
 
-    const handleBookmarkClick = async () => {
-        const newBookmarkStatus = !bookmarkFill;
-        setBookmarkFill(newBookmarkStatus);
 
-        const userId = 'xxvkRzKqFcWLVx4hWCM8GgQf1hE3';
-
-        try {
-            const userRef = firestore().collection('users').doc(userId);
-            const snapshot = await userRef.get();
-            if (!snapshot.exists) {
-                throw new Error("사용자가 존재하지 않습니다.");
-            }
-
-            const userBookmarkData = snapshot.data();
-            let updatedBookmarks = userBookmarkData.user_bookmark || [];
-
-            const recipeId = item.id;
-            const bookmarkIndex = updatedBookmarks.indexOf(recipeId);
-            if (newBookmarkStatus && bookmarkIndex === -1) {
-                updatedBookmarks.push(recipeId);
-            } else if (!newBookmarkStatus && bookmarkIndex !== -1) {
-                updatedBookmarks.splice(bookmarkIndex, 1);
-            }
-
-            await userRef.update({
-                user_bookmark: updatedBookmarks
-            });
-            console.log('사용자 북마크가 업데이트되었습니다.');
-        } catch (error) {
-            console.error('사용자 북마크를 업데이트하는 중에 오류가 발생했습니다.', error);
-        }
+    const handleBookmarkClick = () => {
+        setBook((prevBook) => ({
+            ...prevBook,
+            bookmarkFill: !prevBook.bookmarkFill,
+        }));
+        alert('북마크버튼을 누른 후 화면을 당겨 새로고침을 해보세요 !');
     };
 
     const getImageForBookmark = () => {
-        return bookmarkFill 
-            ? require('../assets/icons/bookmarkFill.png')
-            : require('../assets/icons/bookmark.png');
+        return book.bookmarkFill 
+            ? require('../assets/icons/bookmark.png')
+            : require('../assets/icons/bookmarkFill.png');
+    };
+
+    const photoImage = (recipeImage) => {
+        if(recipeImage==''){
+        return require('../assets/icons/photoNotReady.png');
+      }
+      else{
+        return {uri: recipeImage};
+      }
     };
 
     return (
-        <View style={{ alignItems: 'center', left: 20 }}>
+        
+        <View style={{ alignItems: 'center', margin: 10}}>
             <TouchableOpacity
             style={styles.post}
-            onPress={() => navigation.navigate('RecipeDetail', { recipeId: item.id })}>
-                <Image 
-                    source={{ uri: item.image }} 
-                    style={{ width: 132, height: 70, left: 12, top: 9, borderRadius: 7 }} 
-                />
+            onPress={() => navigation.navigate('RecipeMain', { recipeId: item.id })}>
+            <View style={{width: 132, height: 70, left: 12, top: 9, borderRadius: 7, backgroundColor: '#ccc', alignItems: 'center', justifyContent: 'center'}}>
+                <Image source={photoImage(item.image)} style={{width: 120, height: 60, }}/>
+            </View>
                 <Text style={styles.foodText}>{item.name}</Text>
                 <View style={{ left: 12, top: 15 }}>
                     <TouchableOpacity 
-                        style={{ position: 'absolute', left: 110, bottom: 23 }} 
+                        style={[ styles.book, { backgroundColor: book.bookmarkFill? 'white' : 'white' }]} 
                         onPress={handleBookmarkClick}
                     >
-                        <Image source={getImageForBookmark()} />
+                            <Image source={getImageForBookmark('bookmark')} />
                     </TouchableOpacity>
-                    <View
-                        style={{
-                            borderWidth: 1.5,
-                            borderColor: 'red',
-                            borderRadius: 50,
-                            width: 13,
-                            height: 13,
-                            top: 6
-                        }}
-                    >
-                        <Text style={{ color: 'red', textAlign: 'center', fontWeight: 'bold', fontSize: 9 }}>
-                            i
-                        </Text>
-                    </View>
-                    <Text style={styles.lackingText}>{item.lacking}{item.lackMore} 부족</Text>
                 </View>
-                <View style={{ left: 7, flexDirection: 'row' }}>
-                    <Image style={{ top: 15, marginLeft: 4 }} source={require('../assets/icons/clock.png')} />
-                    <Text style={styles.timeText}>{item.time} 분 이내</Text>
+                <View style={{ top: 13, marginLeft: 5, left: 7, flexDirection: 'row' }}>
+                    <Image style={{ top: 15, }} source={require('../assets/icons/clock.png')} />
+                    <Text style={styles.timeText}>
+                    {item.time[0] !== 0 && `${item.time[0]}시간 `}
+                    {item.time[1] !== 0 && `${item.time[1]}분`} 이내
+                    </Text>
                 </View>
             </TouchableOpacity>
         </View>
@@ -129,13 +104,30 @@ const BookMark = ({ navigation }) => {
         }
     };
 
+    const [refreshing, setRefreshing] = useState(false);
+    
+    const getRefreshData = async () => {
+     	setRefreshing(true);
+        await RefreshDataFetch();
+        setRefreshing(false);
+    }
+    
+    const onRefresh = () => {
+    	if(!refreshing) {
+        	getRefreshData();
+        }
+    };
+
     return (
         <View style={styles.container}>
             <FlatList
                 data={bookmarkedRecipes}
+                extraData={bookmarkedRecipes}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => <BookMarkItem item={item}  navigation={navigation} />}
                 numColumns={2}
+                onRefresh={onRefresh}
+                refreshing={refreshing}
             />
         </View>
     );
@@ -144,10 +136,11 @@ const BookMark = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: '#F8F9FA',
-        height: 'auto',
+        height: '100%',
+        alignItems: 'center',
+
     },
     post: {
-        margin: 10,
         position: 'relative',
         width: 155,
         height: 165,
@@ -157,24 +150,17 @@ const styles = StyleSheet.create({
         alignContent: 'flex-start',
         shadowColor: "#000000",
         shadowOffset: {
-            width: 5,
-            height: 5,
-        },
-        shadowOpacity: 0.25,
+        width: 10,
+        height: 10,
+    },
+        hadowOpacity: 0.25,
         shadowRadius: 10,
-        elevation: 10
+        elevation: 5,
     },
     foodText: {
-        top: 14,
+        top: 16,
         paddingLeft: 12,
         fontWeight: 'bold',
-    },
-    lackingText: {
-        paddingLeft: 16,
-        bottom: 7,
-        color: '#E50000',
-        fontSize: 10,
-        fontFamily: 'NanumGothic',
     },
     timeText: {
         top: 10,
@@ -183,6 +169,14 @@ const styles = StyleSheet.create({
         margin: 5,
         fontFamily: 'NanumGothic',
     },
+    book: {
+        position: 'absolute', 
+        bottom: 1,
+        left: 110,
+        width: 16,
+        height: 20,
+        borderColor: 'grey',
+    }
 });
 
 export default BookMark;

@@ -1,16 +1,11 @@
-<<<<<<< HEAD
-import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, Switch, ScrollView } from 'react-native';
-=======
 import React, { useState, useEffect, } from 'react';
 import { View, Text, TouchableOpacity , StyleSheet, TextInput, Modal, ScrollView,Switch,Image} from 'react-native';
->>>>>>> 63e3cb5868569e51118299a2897e114422cc7821
 import firestore from "@react-native-firebase/firestore";
 import { CurrentRenderContext } from '@react-navigation/native';
 import BookmarkFill from '../assets/icons/bookmarkFill.png';
 import Bookmark from '../assets/icons/bookmark.png';
 
-const RecipeTab = ({navigation}) => {
+const UserRecipeTab = ({navigation}) => {
   const [showUserRecipes, setShowUserRecipes] = useState(false);
   const [recipeData, setRecipeData] = useState([]);
   const [refrigeratorIngredients, setRefrigeratorIngredients] = useState([]);
@@ -117,11 +112,14 @@ const photoImage = () => {
  const [modalVisible, setModalVisible] = useState(false);
 
 {/* 내 레시피만 보기 */}
-
+const [my, setMy] = useState({
+    check: true,
+    checkFill: true,
+  });
 
   const handleCheckboxClick = (buttonName) => {
 
-    navigation.navigate('UserRecipeTab');
+    navigation.navigate('RecipeTab');
   }; 
 
    {/* 조리가능순 버튼 (난이도 재활용)*/}
@@ -137,6 +135,19 @@ const photoImage = () => {
     }));
   }; 
 
+  const getImageForButton = (buttonName) => {
+    if (star[buttonName]) {
+      switch (buttonName) {
+        case 'button2':
+          return require('../assets/icons/quick.png');
+        default:
+          return require('../assets/icons/koreanOrder.png');
+      }
+    } 
+    else{
+      return require('../assets/icons/koreanOrder.png');
+    }
+  };
 
 
   {/* bookmark */}
@@ -183,7 +194,6 @@ const photoImage = () => {
   };
 
   return (
-    <ScrollView>
     <View style={styles.container}>
       <View style = {styles.searchArea}>
         <View style = {styles.searchWrapper}>
@@ -207,11 +217,16 @@ const photoImage = () => {
       {/* 내 레시피만 보기 */}
 <View style={{flexDirection: 'row', marginTop: 10, gap: 4, marginLeft: 10}}>
   {/* 레시피 도움말 i버튼 */}
+  {/* <TouchableOpacity
+        style={styles.infoBtn}
+        onPress={() => setModalVisible(true)}>
+        <Text style={styles.infoTxt}>i</Text>
+      </TouchableOpacity> */}
         <Text style={{ fontSize: 10, marginLeft: 10}}>
           내가 만든 레시피만 보기
         </Text>
-    <TouchableOpacity onPress={() => navigation.navigate('UserRecipeTab')}>
-        <Image source={require('../assets/icons/check.png')}/>
+    <TouchableOpacity onPress={() => navigation.navigate('RecipeTab')}>
+        <Image source={require('../assets/icons/checkFill.png')}/>
     </TouchableOpacity>
 
       {/* 조리가능 순 */}
@@ -234,7 +249,7 @@ const photoImage = () => {
             <TouchableOpacity
               key={recipe.id}
               style={styles.post}
-              onPress={() => navigation.navigate('RecipeMain', { recipeId: recipe.id })}>
+              onPress={() => navigation.navigate('UserRecipeMain', { recipeId: recipe.id })}>
          <View style={{width: 132, height: 70, left: 12, top: 9, borderRadius: 7, backgroundColor: '#ccc', alignItems: 'center', justifyContent: 'center'}}>
          <Image
           source={{ uri: recipe.image }}
@@ -335,15 +350,7 @@ const photoImage = () => {
         </View>
       </Modal>
     </View>
-<<<<<<< HEAD
-    <TouchableOpacity onPress={()=> navigation.navigate('AddRecipeMain')}>
-    <Text style={{ color: '#F8F9FA',}}>go to add recipe</Text>
-    </TouchableOpacity>
-    </ScrollView>
-  );
-=======
   )
->>>>>>> 63e3cb5868569e51118299a2897e114422cc7821
 };
 
 
@@ -497,4 +504,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RecipeTab;
+export default UserRecipeTab;

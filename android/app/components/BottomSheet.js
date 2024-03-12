@@ -7,7 +7,6 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal,
   TextInput,
   Image
 } from 'react-native';
-import  {  vegetable, bread, fruit, sausage, seafood, truffle, noodle, spice, bean, grain, meat, milk }  from './IngredientsArray';
 import Ingredients from "./Ingredients";
 
 const BottomSheet = () => {
@@ -152,14 +151,18 @@ const styles = StyleSheet.create({
         width: 141
     },
     closeButton:{
-        marginTop: 16,
-        marginLeft: 155,
-        width: 38,
-        height: 23,
-        backgroundColor: '#F8F9FA',
-        justifyContent: 'center',
-        alignItems:'center',
-        // backgroundColor:'yellow'
+      // marginTop: 16,
+      position:'absolute',
+      top: 16,
+      right: 20,
+      // marginLeft: 170,
+      width: 38,
+      height: 23,
+      fontSize: 20,
+      backgroundColor: '#F8F9FA',
+      justifyContent: 'center',
+      alignItems:'center',
+      // backgroundColor:'yellow'
     },
     inputArea:{
         width:'100%',
